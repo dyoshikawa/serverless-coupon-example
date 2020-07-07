@@ -25,17 +25,61 @@ yarn cdk deploy
 
 `STAGE=prod yarn cdk deploy` とすることでプロダクションデプロイとなります。
 
-### 自動テスト
+### 動作確認方法
+
+`yarn cdk deploy` 完了後、
+
+```
+✅  serverless-coupon-example-dev
+
+Outputs:
+serverless-coupon-example-dev.xxxxxx = https://xxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/
+```
+
+`https://` から始まるURLを控えておきます。
+
+その後、簡易クライアントを使って動作確認ができます。
+
+#### client.env設定
 
 ```bash
-cd lambda-src
+cp client.env.example client.env
+```
+
+`client.env` に以下を追記。
+
+```dotenv
+# BASE_URLの値に先程控えたURLを入力
+BASE_URL=https://xxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/
+```
+
+#### 簡易クライアントによる動作確認
+
+`lambda-src` 直下に移動しておく。
+
+```bash
+# クーポンのサンプルデータを投入
+yarn start:client create
+
+# クーポン取得
+# 取得したいクーポンのIDを引数として渡す
+yarn start:client findById 0000001
+
+# キーワード検索
+yarn start:client search
+```
+
+### 自動テスト
+
+`lambda-src` 直下で以下を実行。
+
+```bash
 docker-compose up -d # localstackがreadyになるまで待つ
 yarn test
 ```
 
 ## TODO
 
-- 動作確認方法
 - アーキテクチャ説明
 - APIドキュメント
 - CORS対応
