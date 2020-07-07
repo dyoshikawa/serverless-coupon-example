@@ -36,7 +36,7 @@ export class AwsStack extends cdk.Stack {
     })
 
     // dynamodb
-    const couponTable = createCouponTable({ prefix, scope: this })
+    const couponTable = createCouponTable({ prefix, scope: this, stage })
     const couponIndexTable = createCouponIndexTable({
       prefix,
       scope: this,

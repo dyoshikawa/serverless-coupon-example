@@ -6,9 +6,11 @@ import { Stage } from './Stage'
 export const createCouponTable = ({
   prefix,
   scope,
+  stage,
 }: {
   prefix: string
   scope: cdk.Construct
+  stage: Stage
 }): dynamodb.Table => {
   const couponTableId = new ResourceId(prefix, 'coupon-table')
   return new dynamodb.Table(scope, couponTableId.toString(), {
@@ -19,7 +21,8 @@ export const createCouponTable = ({
     tableName: couponTableId.toString(),
     stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT recommended for production code TODO 分岐する
+    removalPolicy:
+      stage === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY,
   })
 }
 
