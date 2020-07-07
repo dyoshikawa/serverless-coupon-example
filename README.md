@@ -42,6 +42,8 @@ serverless-coupon-example-dev.xxxxxx = https://xxxxx.execute-api.ap-northeast-1.
 
 #### client.env設定
 
+下記のコマンドで `client.env` を作成する。
+
 ```bash
 cp client.env.example client.env
 ```
