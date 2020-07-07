@@ -14,11 +14,11 @@ const clientBootstrap = (): Container => ({
 })
 
 const findById = async (baseUrl: string, couponId: string): Promise<any> => {
-  const res = await Axios.get(`${baseUrl}/coupons/${couponId}`).catch((e) =>
-    Promise.reject(e)
-  )
-  console.log(res.data)
-  return res
+  return (
+    await Axios.get(`${baseUrl}/coupons/${couponId}`).catch((e) =>
+      Promise.reject(e)
+    )
+  ).data
 }
 
 const create = async (container: Container, baseUrl: string): Promise<any> => {
@@ -30,7 +30,7 @@ const create = async (container: Container, baseUrl: string): Promise<any> => {
     './resource/coupon_qr_code.jpg'
   )
 
-  const res = await Axios.post(`${baseUrl}`, {
+  const res = await Axios.post(`${baseUrl}/coupons`, {
     id: Faker.random.number(9999999).toString(),
     title: '【秋葉原店】全商品 10% OFF!',
     description:
@@ -59,17 +59,14 @@ const search = async (baseUrl): Promise<any> => {
       startKeyCouponId: string
     }
   ) => {
-    console.log(`${cnt}回目完了`)
+    if (cnt > 0) console.log(`${cnt}ページ目取得完了`)
     if (
       cnt > 0 &&
       ([opt?.startKeyKey, opt?.startKeyCouponId].includes(undefined) ||
         [opt?.startKeyKey, opt?.startKeyCouponId].includes(''))
     )
       return data
-    console.log(`${cnt + 1}回目開始`)
-    // console.log(decodeURI(opt?.startKeyKey || ''))
-    // console.log(opt?.startKeyCouponId)
-    // console.log(data.length)
+    console.log(`${cnt + 1}ページ目取得開始`)
     const urlParams: {
       keyword: string
       startKeyKey?: string
