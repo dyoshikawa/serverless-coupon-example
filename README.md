@@ -24,3 +24,10 @@ yarn cdk deploy
 ```
 
 `STAGE=prod yarn cdk deploy` とすることでプロダクションデプロイとなります。
+
+## TODO
+
+- 動作確認方法
+- アーキテクチャ説明
+- APIドキュメント
+- CORS対応
