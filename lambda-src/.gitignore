@@ -1,0 +1,23 @@
+# node.js
+node_modules
+
+# editor
+.idea
+
+# yarn
+*.log
+
+# parcel
+dist
+.cache
+
+# lambroll
+function.json
+.lambdaignore
+
+# .env
+client.env
+
+# テスト用
+!tmp/.keep
+tmp/*
