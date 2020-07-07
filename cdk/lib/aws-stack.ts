@@ -9,15 +9,13 @@ import { createApi } from './apigateway'
 import { createBucket } from './s3'
 import { createDistribution, createOriginAccessIdentity } from './cloudfront'
 import { createCouponIndexTable, createCouponTable } from './dynamodb'
-import { Stage } from './Stage'
+import { getStage } from './Stage'
 
 export class AwsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
-    const stage = ((this.node.tryGetContext('stage') as string) ||
-      'dev') as Stage
-    if (!['dev', 'prod'].includes(stage)) throw new Error('Invalid stage')
-    const prefix = `${id}-${stage}`
+    const stage = getStage()
+    const prefix = id
 
     // s3 & cloudfront
     const originAccessIdentity = createOriginAccessIdentity({

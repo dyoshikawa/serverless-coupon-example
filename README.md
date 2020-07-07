@@ -23,4 +23,4 @@ yarn cdk bootstrap
 yarn cdk deploy
 ```
 
-`yarn cdk deploy` に `-c stage=prod` オプションを付けることでプロダクションデプロイとなります。
+`STAGE=prod yarn cdk deploy` とすることでプロダクションデプロイとなります。
