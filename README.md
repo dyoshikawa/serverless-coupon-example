@@ -8,7 +8,7 @@
 ## デプロイ手順
 ### ソースビルド
 
-```
+```bash
 cd lambda-src
 yarn
 yarn build:all
@@ -16,7 +16,7 @@ yarn build:all
 
 ### デプロイ
 
-```
+```bash
 cd cdk
 yarn
 yarn cdk bootstrap
@@ -24,6 +24,14 @@ yarn cdk deploy
 ```
 
 `STAGE=prod yarn cdk deploy` とすることでプロダクションデプロイとなります。
+
+### 自動テスト
+
+```bash
+cd lambda-src
+docker-compose up -d # localstackがreadyになるまで待つ
+yarn test
+```
 
 ## TODO
 
