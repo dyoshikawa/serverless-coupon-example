@@ -4,6 +4,9 @@
 
 - Node.js v12.12.0
 - yarn 1.22.4
+- Docker 19.03.8
+- docker-compose 1.25.5
+- aws-cli 2.0.19 
 
 ## デプロイ手順
 ### ソースビルド
