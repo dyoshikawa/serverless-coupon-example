@@ -57,8 +57,6 @@ BASE_URL=https://xxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/
 
 #### 簡易クライアントによる動作確認
 
-`lambda-src` 直下に移動しておく。
-
 ```bash
 # クーポンのサンプルデータを投入
 yarn start:client create
