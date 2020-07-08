@@ -1,7 +1,7 @@
 import { APIGatewayProxyResult } from 'aws-lambda'
 
 export const response = (
-  value: any,
+  value: unknown,
   opt?: {
     headers?: { [key: string]: string }
   }

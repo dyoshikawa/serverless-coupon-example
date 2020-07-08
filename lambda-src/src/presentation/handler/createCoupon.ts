@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-import { bootstrap } from '../bootstrap'
+import { bootstrap } from '../../bootstrap'
 import { response, serverError } from '../http/response'
 
 export const createCoupon = async (
