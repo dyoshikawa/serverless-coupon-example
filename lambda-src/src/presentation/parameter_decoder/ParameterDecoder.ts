@@ -1,8 +1,13 @@
 import {
+  COUPON_DESCRIPTION_EMPTY,
   COUPON_DESCRIPTION_NOT_GIVEN,
+  COUPON_ID_EMPTY,
   COUPON_ID_NOT_GIVEN,
+  COUPON_IMAGE_EMPTY,
   COUPON_IMAGE_NOT_GIVEN,
+  COUPON_QR_CODE_EMPTY,
   COUPON_QR_CODE_NOT_GIVEN,
+  COUPON_TITLE_EMPTY,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
   PARAMS_NOT_GIVEN,
@@ -100,16 +105,28 @@ export const decodeCreateCouponParams = (
       qrCode?: string
     }
   } catch (e) {
-    console.error(e)
     throw new ParameterDecodeError([INVALID_JSON])
   }
 
   const errs: Array<string> = []
   if (params.id === undefined) errs.push(COUPON_ID_NOT_GIVEN)
+  if (params.id !== undefined && params.id === '') errs.push(COUPON_ID_EMPTY)
+
   if (params.title === undefined) errs.push(COUPON_TITLE_NOT_GIVEN)
+  if (params.title !== undefined && params.title === '')
+    errs.push(COUPON_TITLE_EMPTY)
+
   if (params.description === undefined) errs.push(COUPON_DESCRIPTION_NOT_GIVEN)
+  if (params.description !== undefined && params.description === '')
+    errs.push(COUPON_DESCRIPTION_EMPTY)
+
   if (params.image === undefined) errs.push(COUPON_IMAGE_NOT_GIVEN)
+  if (params.image !== undefined && params.image === '')
+    errs.push(COUPON_IMAGE_EMPTY)
+
   if (params.qrCode === undefined) errs.push(COUPON_QR_CODE_NOT_GIVEN)
+  if (params.qrCode !== undefined && params.qrCode === '')
+    errs.push(COUPON_QR_CODE_EMPTY)
 
   if (errs.length > 0) {
     throw new ParameterDecodeError(errs)
