@@ -11,6 +11,13 @@ export const decodeFindCouponById = (couponId: string | undefined): string => {
   return couponId
 }
 
+export type DecodeSearchCouponParams = {
+  keyword?: string
+  per?: string
+  startKeyKey?: string
+  startKeyCouponId?: string
+} | null
+
 export type DecodeSearchCouponResult = {
   keyword: string
   per: number | undefined
@@ -18,12 +25,7 @@ export type DecodeSearchCouponResult = {
 }
 
 export const decodeSearchCouponParams = (
-  params: {
-    keyword?: string
-    per?: string
-    startKeyKey?: string
-    startKeyCouponId?: string
-  } | null
+  params: DecodeSearchCouponParams
 ): {
   keyword: string
   per: number | undefined
@@ -50,12 +52,8 @@ export const decodeSearchCouponParams = (
 
   let per: number | undefined = undefined
   if (params.per !== undefined) {
-    try {
-      per = parseInt(params.per)
-    } catch (e) {
-      console.error(e)
-      throw new Error(PER_INVALID)
-    }
+    if (isNaN(Number(params.per))) throw new Error(PER_INVALID)
+    per = parseInt(params.per)
   }
 
   return {
