@@ -6,7 +6,7 @@
 - yarn 1.22.4
 - Docker 19.03.8
 - docker-compose 1.25.5
-- aws-cli 2.0.19 
+- aws-cli 2.0.19
 
 ## デプロイ手順
 ### ソースビルド
@@ -27,6 +27,98 @@ yarn cdk deploy
 ```
 
 `STAGE=prod yarn cdk deploy` とすることでプロダクションデプロイとなります。
+
+### APIドキュメント
+
+#### /coupons/:couponId
+
+単一のクーポンを取得する。
+
+##### Response
+
+```json
+{
+  "id": "8163186",
+  "title": "【秋葉原店】全商品 10% OFF!",
+  "description": "ご利用一回限り。他のクーポンとの併用はできません。クーポンをご利用いただいた場合、ポイントはつきません。",
+  "imageUrl": "https://example.com/a3391cd8-66dc-4f1d-a825-7e471eece692.png",
+  "qrCodeUrl": "https://example.com/22fcbebe-5030-45c3-ac50-456ef0fc03ff.jpg",
+  "savedAt": "2020-07-08T04:37:56.859Z"
+}
+```
+
+#### GET /coupons/search
+
+クーポンのキーワード検索を行う。  
+URLクエリパラメータに文字列を設定する。
+
+##### Request
+
+| クエリパラメータ | 値 | 例 | 備考 | 必須 |
+|:---|:---|:---|:---|:---|
+| keyword | キーワード文字列 (要URLエンコード) | "秋葉原店" (をURLエンコードした文字列) | | ✅ |
+| startKeyKey | 続けて取得する結果の先頭のクーポンID (要URLエンコード) | "秋葉原店" (をURLエンコードした文字列) | 検索結果が2ページ以上の場合に使用 | |
+| startKeyCouponId | 続けて取得する結果の先頭のクーポンID | "0000001" | 検索結果が2ページ以上の場合に使用 | |
+
+##### Response
+
+###### Header
+
+| 名前 | 値 | 例 |
+|:---|:---|:---|
+| x-coupon-start-key-key |  続けて取得する結果の先頭のクーポンID (URLエンコード済) | "商品" (をURLエンコードした文字列) |
+| x-coupon-start-key-coupon-id | 続けて取得する結果の先頭のクーポンID | "0000001" |
+
+###### Body
+
+クーポンの配列を返す。
+
+```json
+[
+  {
+    "id": "8163186",
+    "title": "【秋葉原店】全商品 10% OFF!",
+    "description": "ご利用一回限り。他のクーポンとの併用はできません。クーポンをご利用いただいた場合、ポイントはつきません。",
+    "imageUrl": "https://example.com/a3391cd8-66dc-4f1d-a825-7e471eece692.png",
+    "qrCodeUrl": "https://example.com/22fcbebe-5030-45c3-ac50-456ef0fc03ff.jpg",
+    "savedAt": "2020-07-08T04:37:56.859Z"
+  }
+]
+```
+
+#### POST /coupons
+
+**テスト用のためプロダクション環境では使用不可。**  
+クーポンを作成する。
+
+##### Request
+
+`image` と `qrCode` には画像データをBase64エンコードした文字列を渡す。
+
+```json
+{
+  "id": "8163186",
+  "title": "【秋葉原店】全商品 10% OFF!",
+  "description": "ご利用一回限り。他のクーポンとの併用はできません。クーポンをご利用いただいた場合、ポイントはつきません。",
+  "image": "IMAGE_BASE64_DATA",
+  "qrCode": "QR_CODE_BASE64_DATA"
+}
+```
+
+##### Response
+
+作成したクーポンデータを返す。
+
+```json
+{
+  "id": "8163186",
+  "title": "【秋葉原店】全商品 10% OFF!",
+  "description": "ご利用一回限り。他のクーポンとの併用はできません。クーポンをご利用いただいた場合、ポイントはつきません。",
+  "imageUrl": "https://example.com/a3391cd8-66dc-4f1d-a825-7e471eece692.png",
+  "qrCodeUrl": "https://example.com/22fcbebe-5030-45c3-ac50-456ef0fc03ff.jpg",
+  "savedAt": "2020-07-08T04:37:56.859Z"
+}
+```
 
 ### 動作確認方法
 
@@ -84,5 +176,4 @@ yarn test
 ## TODO
 
 - アーキテクチャ説明
-- APIドキュメント
 - CORS対応

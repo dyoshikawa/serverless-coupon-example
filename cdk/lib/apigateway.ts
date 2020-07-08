@@ -47,10 +47,13 @@ export const createApi = ({
   )
   coupons.addResource('search').addMethod('GET', searchCouponIntegration)
 
-  const createCouponIntegration = new apigateway.LambdaIntegration(
-    createCouponLambda
-  )
-  coupons.addMethod('POST', createCouponIntegration)
+  if (stage !== 'prod') {
+    // テストデータ投入用エンドポイント
+    const createCouponIntegration = new apigateway.LambdaIntegration(
+      createCouponLambda
+    )
+    coupons.addMethod('POST', createCouponIntegration)
+  }
 
   return api
 }
