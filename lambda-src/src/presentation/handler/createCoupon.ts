@@ -17,6 +17,7 @@ import {
   COUPON_TITLE_EMPTY,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
+  PARAMS_NOT_GIVEN,
 } from '../../constant/error'
 import { ParameterDecodeError } from '../parameter_decoder/ParameterDecodeError'
 
@@ -30,6 +31,8 @@ export const createCoupon = async (
     if (e instanceof ParameterDecodeError) {
       const msgs = e.errors.map((err) => {
         switch (err) {
+          case PARAMS_NOT_GIVEN:
+            return 'Must have JSON body.'
           case INVALID_JSON:
             return 'Invalid JSON parameter.'
           case COUPON_ID_NOT_GIVEN:

@@ -51,7 +51,7 @@ export const serverError = (
     headers: defaultHeaders,
     body: JSON.stringify(
       messages === undefined
-        ? 'Internal server error.'
+        ? { message: 'Internal server error.' }
         : (messages.map((message) => ({ message })) as ErrorResponseBody),
       null,
       2
