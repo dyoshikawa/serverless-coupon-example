@@ -1,13 +1,19 @@
 import {
+  decodeCreateCouponParams,
   decodeFindCouponById,
   DecodeSearchCouponParams,
   decodeSearchCouponParams,
 } from './ParameterDecoder'
 import {
   COUPON_ID_NOT_GIVEN,
-  PARAMS_NOT_GIVEN, PER_INVALID,
-  SEARCH_KEYWORD_NOT_GIVEN, START_KEY_INVALID,
+  COUPON_TITLE_NOT_GIVEN,
+  INVALID_JSON,
+  PARAMS_NOT_GIVEN,
+  PER_INVALID,
+  SEARCH_KEYWORD_NOT_GIVEN,
+  START_KEY_INVALID,
 } from '../../constant/error'
+import { ParameterDecodeError } from './ParameterDecodeError'
 
 describe('ParameterDecoder', () => {
   describe('decodeFindCouponId', () => {
@@ -70,6 +76,43 @@ describe('ParameterDecoder', () => {
           startKeyKey: 'キーワード',
         })
       }).toThrow(new Error(START_KEY_INVALID))
+    })
+  })
+
+  describe('decodeCreateCouponParams', () => {
+    it('全パラメータを満たし、文字列で渡した場合、Objectに変換して返す', () => {
+      const params = {
+        id: '0000001',
+        title: 'タイトル',
+        description: '説明',
+        image: 'DUMMY',
+        qrCode: 'DUMMY',
+      }
+      expect(decodeCreateCouponParams(JSON.stringify(params))).toEqual({
+        id: '0000001',
+        title: 'タイトル',
+        description: '説明',
+        image: 'DUMMY',
+        qrCode: 'DUMMY',
+      })
+    })
+
+    it('JSONでない文字列を渡した場合、エラーを投げる', () => {
+      expect(() => {
+        decodeCreateCouponParams('JSONでない文字列')
+      }).toThrow(new ParameterDecodeError([INVALID_JSON]))
+    })
+
+    it('titleが欠けた場合、エラーを投げる', () => {
+      const params = {
+        id: '0000001',
+        description: '説明',
+        image: 'DUMMY',
+        qrCode: 'DUMMY',
+      }
+      expect(() => {
+        decodeCreateCouponParams(JSON.stringify(params))
+      }).toThrow(new ParameterDecodeError([COUPON_TITLE_NOT_GIVEN]))
     })
   })
 })
