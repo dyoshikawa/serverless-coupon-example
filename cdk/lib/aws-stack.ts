@@ -49,6 +49,7 @@ export class AwsStack extends cdk.Stack {
       COUPON_INDEX_TABLE_NAME: couponIndexTable.tableName,
       BUCKET_NAME: bucket.bucketName,
       DOMAIN_NAME: distribution.domainName,
+      ALLOW_ORIGIN: stage === 'prod' ? '' : '*',
     }
     const findCouponByIdLambda = createFindCouponById({
       scope: this,

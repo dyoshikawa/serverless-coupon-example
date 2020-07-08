@@ -33,6 +33,11 @@ export const createApi = ({
     deployOptions: {
       stageName: stage,
     },
+    defaultCorsPreflightOptions: {
+      allowHeaders: apigateway.Cors.DEFAULT_HEADERS,
+      allowOrigins: stage === 'prod' ? [] : apigateway.Cors.ALL_ORIGINS,
+      allowMethods: apigateway.Cors.ALL_METHODS,
+    },
   })
 
   const coupons = api.root.addResource('coupons')
