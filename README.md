@@ -176,4 +176,3 @@ yarn test
 ## TODO
 
 - アーキテクチャ説明
-- CORS対応
