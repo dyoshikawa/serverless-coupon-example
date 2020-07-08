@@ -1,5 +1,5 @@
 import { AttributeValue, DynamoDBStreamEvent } from 'aws-lambda'
-import { bootstrap } from '../bootstrap'
+import { bootstrap } from '../../bootstrap'
 
 export const createCouponIndex = async (
   event: DynamoDBStreamEvent
@@ -23,11 +23,9 @@ export const createCouponIndex = async (
         if (newItem.title.S === undefined)
           return Promise.reject(new Error('Undefined: newItem.title.S'))
 
-        const indexes = await couponService
+        await couponService
           .createIndexes(newItem.id.S, newItem.title.S)
           .catch((e) => Promise.reject(e))
-        console.log('indexes')
-        console.log(indexes)
         break
       }
       case 'MODIFY': {
