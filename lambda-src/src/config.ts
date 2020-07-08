@@ -11,3 +11,4 @@ export const couponIndexTableName = (): string =>
   unwrapEnv('COUPON_INDEX_TABLE_NAME')
 export const bucketName = (): string => unwrapEnv('BUCKET_NAME')
 export const domainName = (): string => unwrapEnv('DOMAIN_NAME')
+export const allowOrigin = (): string => unwrapEnv('ALLOW_ORIGIN')

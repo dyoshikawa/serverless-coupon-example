@@ -1,4 +1,9 @@
 import { APIGatewayProxyResult } from 'aws-lambda'
+import * as Config from '../../config'
+
+const defaultHeaders = {
+  'Access-Control-Allow-Origin': Config.allowOrigin(),
+}
 
 export const response = (
   value: unknown,
@@ -8,10 +13,16 @@ export const response = (
 ): APIGatewayProxyResult => {
   const res: APIGatewayProxyResult = {
     statusCode: 200,
+    headers: {
+      ...defaultHeaders,
+    },
     body: JSON.stringify(value, null, 2),
   }
   if (opt?.headers !== undefined) {
-    res.headers = opt.headers
+    res.headers = {
+      ...res.headers,
+      ...opt.headers,
+    }
   }
   return res
 }
@@ -23,6 +34,7 @@ export const requestError = (
 ): APIGatewayProxyResult => {
   return {
     statusCode: 400,
+    headers: defaultHeaders,
     body: JSON.stringify(
       messages.map((message) => ({ message })) as ErrorResponseBody,
       null,
@@ -36,9 +48,10 @@ export const serverError = (
 ): APIGatewayProxyResult => {
   return {
     statusCode: 500,
+    headers: defaultHeaders,
     body: JSON.stringify(
       messages === undefined
-        ? 'Internal server error.'
+        ? { message: 'Internal server error.' }
         : (messages.map((message) => ({ message })) as ErrorResponseBody),
       null,
       2

@@ -14,7 +14,6 @@ import {
   SEARCH_KEYWORD_NOT_GIVEN,
   START_KEY_INVALID,
 } from '../../constant/error'
-import { ParameterDecodeError } from './ParameterDecodeError'
 
 describe('ParameterDecoder', () => {
   describe('decodeFindCouponId', () => {
@@ -89,7 +88,9 @@ describe('ParameterDecoder', () => {
         image: 'DUMMY',
         qrCode: 'DUMMY',
       }
-      expect(decodeCreateCouponParams(JSON.stringify(params))).toEqual({
+      const [ok, res] = decodeCreateCouponParams(JSON.stringify(params))
+      expect(ok).toBe(true)
+      expect(res).toEqual({
         id: '0000001',
         title: 'タイトル',
         description: '説明',
@@ -98,22 +99,22 @@ describe('ParameterDecoder', () => {
       })
     })
 
-    it('JSONでない文字列を渡した場合、エラーを投げる', () => {
-      expect(() => {
-        decodeCreateCouponParams('JSONでない文字列')
-      }).toThrow(new ParameterDecodeError([INVALID_JSON]))
+    it('JSONでない文字列を渡した場合、エラー配列を返す', () => {
+      const [ok, res] = decodeCreateCouponParams('JSONでない文字列')
+      expect(ok).toBe(false)
+      expect(res).toEqual([INVALID_JSON])
     })
 
-    it('titleが欠けた場合、エラーを投げる', () => {
+    it('titleが欠けた場合、エラー配列を返す', () => {
       const params = {
         id: '0000001',
         description: '説明',
         image: 'DUMMY',
         qrCode: 'DUMMY',
       }
-      expect(() => {
-        decodeCreateCouponParams(JSON.stringify(params))
-      }).toThrow(new ParameterDecodeError([COUPON_TITLE_NOT_GIVEN]))
+      const [ok, res] = decodeCreateCouponParams(JSON.stringify(params))
+      expect(ok).toBe(false)
+      expect(res).toEqual([COUPON_TITLE_NOT_GIVEN])
     })
 
     it('titleが空文字の場合、エラーを投げる', () => {
@@ -124,9 +125,9 @@ describe('ParameterDecoder', () => {
         image: 'DUMMY',
         qrCode: 'DUMMY',
       }
-      expect(() => {
-        decodeCreateCouponParams(JSON.stringify(params))
-      }).toThrow(new ParameterDecodeError([COUPON_TITLE_EMPTY]))
+      const [ok, res] = decodeCreateCouponParams(JSON.stringify(params))
+      expect(ok).toBe(false)
+      expect(res).toEqual([COUPON_TITLE_EMPTY])
     })
   })
 })
