@@ -5,7 +5,8 @@ import {
   decodeSearchCouponParams,
 } from './ParameterDecoder'
 import {
-  COUPON_ID_NOT_GIVEN, COUPON_TITLE_EMPTY,
+  COUPON_ID_NOT_GIVEN,
+  COUPON_TITLE_EMPTY,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
   PARAMS_NOT_GIVEN,

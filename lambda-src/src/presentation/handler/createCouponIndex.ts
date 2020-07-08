@@ -23,7 +23,7 @@ export const createCouponIndex = async (
         if (newItem.title.S === undefined)
           return Promise.reject(new Error('Undefined: newItem.title.S'))
 
-        const indexes = await couponService
+        await couponService
           .createIndexes(newItem.id.S, newItem.title.S)
           .catch((e) => Promise.reject(e))
         break
