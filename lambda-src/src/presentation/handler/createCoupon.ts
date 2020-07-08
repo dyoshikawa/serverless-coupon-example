@@ -3,6 +3,7 @@ import { bootstrap } from '../../bootstrap'
 import { requestError, response, serverError } from '../http/response'
 import {
   decodeCreateCouponParams,
+  DecodeCreateCouponParamsErrors,
   DecodeCreateCouponParamsResult,
 } from '../parameter_decoder/ParameterDecoder'
 import {
@@ -19,17 +20,15 @@ import {
   INVALID_JSON,
   PARAMS_NOT_GIVEN,
 } from '../../constant/error'
-import { ParameterDecodeError } from '../parameter_decoder/ParameterDecodeError'
 
 export const createCoupon = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  let decodedResult: DecodeCreateCouponParamsResult | undefined = undefined
-  try {
-    decodedResult = decodeCreateCouponParams(event.body)
-  } catch (e) {
-    if (e instanceof ParameterDecodeError) {
-      const msgs = e.errors.map((err) => {
+  const [ok, decodedResult] = decodeCreateCouponParams(event.body)
+
+  if (!ok) {
+    const msgs = (decodedResult as DecodeCreateCouponParamsErrors).map(
+      (err) => {
         switch (err) {
           case PARAMS_NOT_GIVEN:
             return 'Must have JSON body.'
@@ -56,19 +55,21 @@ export const createCoupon = async (
           case COUPON_QR_CODE_EMPTY:
             return 'Must have value "coupon".'
           default: {
-            console.error(err)
-            return undefined
+            console.warn(`Uncatched error message: ${err}`)
           }
         }
-      })
-      if (msgs.includes(undefined)) return serverError()
-      return requestError(msgs as Array<string>)
-    } else {
-      console.error(e)
-      return serverError()
-    }
+      }
+    )
+    return requestError(msgs as Array<string>)
   }
-  const { id, title, description, image, qrCode } = decodedResult
+
+  const {
+    id,
+    title,
+    description,
+    image,
+    qrCode,
+  } = decodedResult as DecodeCreateCouponParamsResult
 
   const { couponService } = bootstrap()
   return await couponService

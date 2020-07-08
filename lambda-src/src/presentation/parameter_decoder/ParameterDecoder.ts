@@ -15,7 +15,6 @@ import {
   SEARCH_KEYWORD_NOT_GIVEN,
   START_KEY_INVALID,
 } from '../../constant/error'
-import { ParameterDecodeError } from './ParameterDecodeError'
 
 export const decodeFindCouponById = (couponId: string | undefined): string => {
   if (couponId === undefined) throw new Error(COUPON_ID_NOT_GIVEN)
@@ -82,10 +81,13 @@ export type DecodeCreateCouponParamsResult = {
   qrCode: string
 }
 
+export type DecodeCreateCouponParamsErrors = Array<string>
+export type Ok = boolean
+
 export const decodeCreateCouponParams = (
   body: string | null
-): DecodeCreateCouponParamsResult => {
-  if (body === null) throw new ParameterDecodeError([PARAMS_NOT_GIVEN])
+): [Ok, DecodeCreateCouponParamsResult | DecodeCreateCouponParamsErrors] => {
+  if (body === null) return [false, [PARAMS_NOT_GIVEN]]
 
   let params:
     | {
@@ -105,7 +107,7 @@ export const decodeCreateCouponParams = (
       qrCode?: string
     }
   } catch (e) {
-    throw new ParameterDecodeError([INVALID_JSON])
+    return [false, [INVALID_JSON]]
   }
 
   const errs: Array<string> = []
@@ -129,8 +131,8 @@ export const decodeCreateCouponParams = (
     errs.push(COUPON_QR_CODE_EMPTY)
 
   if (errs.length > 0) {
-    throw new ParameterDecodeError(errs)
+    return [false, errs]
   } else {
-    return params as DecodeCreateCouponParamsResult
+    return [true, params as DecodeCreateCouponParamsResult]
   }
 }
