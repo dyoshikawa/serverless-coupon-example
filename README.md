@@ -28,6 +28,19 @@ yarn cdk deploy
 
 `STAGE=prod yarn cdk deploy` とすることでプロダクションデプロイとなります。
 
+### アーキテクチャ
+#### 全体像
+
+![AWSアーキテクチャ](https://raw.githubusercontent.com/dyoshikawa/serverless-coupon-example/master/serverless-coupon-example.png)
+
+- クーポンデータの取得
+  - 文字列データはDynamoDB、画像データはS3に保存します。
+  - エンドユーザが取得する際はCloudfrontを経由させることで高速化を狙いました。
+- キーワード検索を行える
+  - [DynamoDBを用いた転置インデックス](https://dev.classmethod.jp/articles/dynamodb-inverted-index/)の手法を採用しました。
+  - Comprehend APIを使って日本語文章からの単語取得を行い、転置インデックス用テーブルに保存します。
+
+
 ### APIドキュメント
 
 #### /coupons/:couponId
@@ -172,7 +185,3 @@ yarn start:client search
 docker-compose up -d # localstackがreadyになるまで待つ
 yarn test
 ```
-
-## TODO
-
-- アーキテクチャ説明
