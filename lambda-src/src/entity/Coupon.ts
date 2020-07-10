@@ -27,7 +27,8 @@ export class Coupon {
     qrCodeUrl: string
     savedAt: Date
   }) {
-    if (id.length !== ID_LENGTH) throw new Error(COUPON_ID_INVALID)
+    if (id.length !== ID_LENGTH || isNaN(Number(id)))
+      throw new Error(COUPON_ID_INVALID)
     this.id = id
     if (title === '' || title.length > MAX_TITLE_LENGTH)
       throw new Error(COUPON_TITLE_INVALID)
