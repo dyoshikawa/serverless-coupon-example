@@ -21,6 +21,10 @@ const findById = async (baseUrl: string, couponId: string): Promise<any> => {
   ).data
 }
 
+const zeroPadding = (num: string, length: number): string => {
+  return `0000000000${num}`.slice(-length)
+}
+
 const create = async (container: Container, baseUrl: string): Promise<any> => {
   const { imageEncoder } = container
   const imageBase64 = await imageEncoder.base64Encode(
@@ -31,7 +35,7 @@ const create = async (container: Container, baseUrl: string): Promise<any> => {
   )
 
   const res = await Axios.post(`${baseUrl}/coupons`, {
-    id: Faker.random.number(9999999).toString(),
+    id: zeroPadding(Faker.random.number(9999999).toString(), 7),
     title: '【秋葉原店】全商品 10% OFF!',
     description:
       'ご利用一回限り。他のクーポンとの併用はできません。クーポンをご利用いただいた場合、ポイントはつきません。',

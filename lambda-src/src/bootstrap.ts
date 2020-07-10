@@ -27,7 +27,7 @@ export const bootstrap = (): Container => {
     baseUrl: `https://${Config.domainName()}`,
   })
   const tokenizer: Tokenizer = new ComprehendTokenizer(new AWS.Comprehend())
-  const time: Time = new TimeImpl('ja')
+  const time: Time = new TimeImpl()
   const couponRepository: CouponRepository = new CouponDynamoRepository({
     dynamoClient: new AWS.DynamoDB.DocumentClient(),
     tableName: Config.couponTableName(),

@@ -109,7 +109,6 @@ describe('CouponDynamoRepository', () => {
       imageUrl: 'https://example.com/image.png',
       qrCodeUrl: 'https://example.com/qr_code.png',
       savedAt: dayjs('2020-01-01').toDate(),
-      savedAtDay: '2020-01-01',
     })
   })
 
@@ -187,7 +186,6 @@ describe('CouponDynamoRepository', () => {
         imageUrl: 'https://example.com/image.png',
         qrCodeUrl: 'https://example.com/qr_code.png',
         savedAt: dayjs('2020-01-01').toDate(),
-        savedAtDay: '2020-01-01',
       },
     ])
   })
