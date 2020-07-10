@@ -1,13 +1,16 @@
 import {
   COUPON_DESCRIPTION_EMPTY,
+  COUPON_DESCRIPTION_INVALID,
   COUPON_DESCRIPTION_NOT_GIVEN,
   COUPON_ID_EMPTY,
+  COUPON_ID_INVALID,
   COUPON_ID_NOT_GIVEN,
   COUPON_IMAGE_EMPTY,
   COUPON_IMAGE_NOT_GIVEN,
   COUPON_QR_CODE_EMPTY,
   COUPON_QR_CODE_NOT_GIVEN,
   COUPON_TITLE_EMPTY,
+  COUPON_TITLE_INVALID,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
   PARAMS_NOT_GIVEN,
@@ -15,6 +18,11 @@ import {
   SEARCH_KEYWORD_NOT_GIVEN,
   START_KEY_INVALID,
 } from '../../constant/error'
+import {
+  ID_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
+  MAX_TITLE_LENGTH,
+} from '../../entity/Coupon'
 
 export const decodeFindCouponById = (couponId: string | undefined): string => {
   if (couponId === undefined) throw new Error(COUPON_ID_NOT_GIVEN)
@@ -111,16 +119,28 @@ export const decodeCreateCouponParams = (
   }
 
   const errs: Array<string> = []
-  if (params.id === undefined) errs.push(COUPON_ID_NOT_GIVEN)
-  if (params.id !== undefined && params.id === '') errs.push(COUPON_ID_EMPTY)
+  if (params.id === undefined) {
+    errs.push(COUPON_ID_NOT_GIVEN)
+  } else {
+    if (params.id === '') errs.push(COUPON_ID_EMPTY)
+    if (params.id.length !== ID_LENGTH || isNaN(Number(params.id)))
+      errs.push(COUPON_ID_INVALID)
+  }
 
-  if (params.title === undefined) errs.push(COUPON_TITLE_NOT_GIVEN)
-  if (params.title !== undefined && params.title === '')
-    errs.push(COUPON_TITLE_EMPTY)
+  if (params.title === undefined) {
+    errs.push(COUPON_TITLE_NOT_GIVEN)
+  } else {
+    if (params.title === '') errs.push(COUPON_TITLE_EMPTY)
+    if (params.title.length > MAX_TITLE_LENGTH) errs.push(COUPON_TITLE_INVALID)
+  }
 
-  if (params.description === undefined) errs.push(COUPON_DESCRIPTION_NOT_GIVEN)
-  if (params.description !== undefined && params.description === '')
-    errs.push(COUPON_DESCRIPTION_EMPTY)
+  if (params.description === undefined) {
+    errs.push(COUPON_DESCRIPTION_NOT_GIVEN)
+  } else {
+    if (params.description === '') errs.push(COUPON_DESCRIPTION_EMPTY)
+    if (params.description.length > MAX_DESCRIPTION_LENGTH)
+      errs.push(COUPON_DESCRIPTION_INVALID)
+  }
 
   if (params.image === undefined) errs.push(COUPON_IMAGE_NOT_GIVEN)
   if (params.image !== undefined && params.image === '')

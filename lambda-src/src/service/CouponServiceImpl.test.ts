@@ -13,6 +13,7 @@ import { CouponRepository } from '../repository/CouponRepository'
 import { ImageEncoder } from '../encoder/ImageEncoder'
 import { Tokenizer } from '../tokenier/Tokenizer'
 import { COUPON_NOT_FOUND } from '../constant/error'
+import { Coupon } from '../entity/Coupon'
 
 describe('CouponServiceImpl', () => {
   const mockedCouponRepository = mock<CouponRepository>()
@@ -26,15 +27,14 @@ describe('CouponServiceImpl', () => {
   })
 
   describe('findById', () => {
-    const coupon = {
+    const coupon = new Coupon({
       id: '0000001',
       title: 'タイトル',
       description: '説明',
       imageUrl: 'https://example.com/image.png',
       qrCodeUrl: 'https://example.com/qrcode.jpg',
       savedAt: dayjs('2020-01-01').toDate(),
-      savedAtDay: '2020-01-01',
-    }
+    })
 
     it('指定IDのクーポンを取得する', async () => {
       when(mockedCouponRepository.findById(anyString())).thenResolve(coupon)
@@ -74,15 +74,14 @@ describe('CouponServiceImpl', () => {
 
   describe('search', () => {
     const coupons = [
-      {
+      new Coupon({
         id: '0000001',
         title: 'タイトル',
         description: '説明',
         imageUrl: 'https://example.com/image.png',
         qrCodeUrl: 'https://example.com/qrcode.jpg',
         savedAt: dayjs('2020-01-01').toDate(),
-        savedAtDay: '2020-01-01',
-      },
+      }),
     ]
     when(mockedCouponRepository.findByWord(anything())).thenResolve({
       coupons,
@@ -110,15 +109,16 @@ describe('CouponServiceImpl', () => {
   })
 
   describe('create', () => {
-    when(mockedCouponRepository.save(anything())).thenResolve({
-      id: '0000001',
-      title: 'タイトル',
-      description: '説明',
-      imageUrl: 'https://example.com/image.png',
-      qrCodeUrl: 'https://example.com/qrcode.jpg',
-      savedAt: dayjs('2020-01-01').toDate(),
-      savedAtDay: '2020-01-01',
-    })
+    when(mockedCouponRepository.save(anything())).thenResolve(
+      new Coupon({
+        id: '0000001',
+        title: 'タイトル',
+        description: '説明',
+        imageUrl: 'https://example.com/image.png',
+        qrCodeUrl: 'https://example.com/qrcode.jpg',
+        savedAt: dayjs('2020-01-01').toDate(),
+      })
+    )
     when(mockedImageEncoder.base64Decode(anyString())).thenResolve({
       file: Buffer.from('DUMMY'),
       ext: 'jpg',
@@ -140,15 +140,16 @@ describe('CouponServiceImpl', () => {
         imageBase64: 'DUMMY',
         qrCodeBase64: 'DUMMY',
       })
-      expect(coupon).toEqual({
-        id: '0000001',
-        title: 'タイトル',
-        description: '説明',
-        imageUrl: 'https://example.com/image.png',
-        qrCodeUrl: 'https://example.com/qrcode.jpg',
-        savedAt: dayjs('2020-01-01').toDate(),
-        savedAtDay: '2020-01-01',
-      })
+      expect(coupon).toEqual(
+        new Coupon({
+          id: '0000001',
+          title: 'タイトル',
+          description: '説明',
+          imageUrl: 'https://example.com/image.png',
+          qrCodeUrl: 'https://example.com/qrcode.jpg',
+          savedAt: dayjs('2020-01-01').toDate(),
+        })
+      )
       verify(mockedImageEncoder.base64Decode(anyString())).twice()
       verify(mockedCouponRepository.save(anything())).once()
     })
