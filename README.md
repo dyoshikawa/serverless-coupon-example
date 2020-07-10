@@ -40,6 +40,20 @@ yarn cdk deploy
   - [DynamoDBを用いた転置インデックス](https://dev.classmethod.jp/articles/dynamodb-inverted-index/)の手法を採用しました。
   - Comprehend APIを使って日本語文章からの単語取得を行い、転置インデックス用テーブルに保存します。
 
+#### ソースコード
+
+![ソースアーキテクチャ](https://github.com/dyoshikawa/serverless-coupon-example/blob/master/source-code-architecture.png?raw=true)
+
+- レイヤー分けを強く意識
+  - 自動テスト容易性を確保
+  - 本物のAWSサービスに依存せずにテストができる
+
+#### その他工夫
+
+- RepositoryやStorageのクラスは本物に近いテストをしたい
+  - [localstack](https://github.com/localstack/localstack) エミュレータを使用
+  - できるだけモック化やエミュレータで完結した自動テストを行う→ローカルやCI上でのテスト環境整備が容易になる
+- 一方でどうしても本物のAWS環境のテストも必要とは思いました
 
 ### APIドキュメント
 
