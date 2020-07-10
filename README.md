@@ -33,6 +33,7 @@ yarn cdk deploy
 
 ![AWSアーキテクチャ](https://raw.githubusercontent.com/dyoshikawa/serverless-coupon-example/master/serverless-coupon-example.png)
 
+- IaCはAWS CDKを使って実現しました。
 - クーポンデータの取得
   - 文字列データはDynamoDB、画像データはS3に保存します。
   - エンドユーザが取得する際はCloudfrontを経由させることで高速化を狙いました。
@@ -44,17 +45,19 @@ yarn cdk deploy
 
 ![ソースアーキテクチャ](https://github.com/dyoshikawa/serverless-coupon-example/blob/master/source-code-architecture.png?raw=true)
 
+- ソースコードから仕様を読み解けるように意識
+  - Entityのconstructorでのバリデーションなど。
 - レイヤー分けを強く意識
-  - 自動テスト容易性を確保
-  - 外側のレイヤーを扱う際は必ずDIしているため、簡単にテストダブルに差し替えられる
-  - 本物のAWSサービスに依存せずにテストができる
+  - 自動テスト容易性を確保。
+  - 外側のレイヤーを扱う際は必ずDIしているため、簡単にテストダブルに差し替えられる。
+  - 本物のAWSサービスに依存せずにテストができる。
 
 #### その他工夫
 
 - RepositoryやStorageのクラスは本物に近いテストをしたい
-  - [localstack](https://github.com/localstack/localstack) エミュレータを使用
-  - できるだけモック化やエミュレータで完結した自動テストを行う→ローカルやCI上でのテスト環境整備が容易になる
-- 一方でどうしても本物のAWS環境のテストも必要とは思いました (ローカルテストのみではIAM権限不足などのエラーを検知できない)
+  - [localstack](https://github.com/localstack/localstack) エミュレータを使用。
+  - できるだけモック化やエミュレータで完結した自動テストを行う→ローカルやCI上でのテスト環境整備が容易になる。
+- 一方でどうしても本物のAWS環境のテストも必要とは思いました (ローカルテストのみではIAM権限不足などのエラーを検知できない) 。
 
 ### APIドキュメント
 
