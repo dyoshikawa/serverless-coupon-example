@@ -29,9 +29,10 @@ export class Coupon {
   }) {
     if (id.length !== ID_LENGTH) throw new Error(COUPON_ID_INVALID)
     this.id = id
-    if (title.length > MAX_TITLE_LENGTH) throw new Error(COUPON_TITLE_INVALID)
+    if (title === '' || title.length > MAX_TITLE_LENGTH)
+      throw new Error(COUPON_TITLE_INVALID)
     this.title = title
-    if (description.length > MAX_DESCRIPTION_LENGTH)
+    if (description === '' || description.length > MAX_DESCRIPTION_LENGTH)
       throw new Error(COUPON_TITLE_INVALID)
     this.description = description
     this.imageUrl = imageUrl
