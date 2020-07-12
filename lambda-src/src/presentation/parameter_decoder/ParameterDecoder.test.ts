@@ -15,12 +15,12 @@ import {
   START_KEY_INVALID,
 } from '../../constant/error'
 import { jpgBase64, pngBase64 } from '../../test/Base64String'
-import { Keyword } from '../../domain/entity/Keyword'
-import { CouponId } from '../../domain/entity/CouponId'
-import { PagePer } from '../../domain/entity/PagePer'
-import { CouponTitle } from '../../domain/entity/CouponTitle'
-import { CouponDescription } from '../../domain/entity/CouponDescription'
-import { Base64 } from '../../domain/entity/Base64'
+import { Keyword } from '../../entity/Keyword'
+import { CouponId } from '../../entity/CouponId'
+import { PagePer } from '../../entity/PagePer'
+import { CouponTitle } from '../../entity/CouponTitle'
+import { CouponDescription } from '../../entity/CouponDescription'
+import { Base64 } from '../../entity/Base64'
 
 describe('ParameterDecoder', () => {
   describe('decodeFindCouponByIdInput', () => {

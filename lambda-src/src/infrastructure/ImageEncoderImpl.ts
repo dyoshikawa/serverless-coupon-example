@@ -1,10 +1,10 @@
 import { decode, encode } from 'node-base64-image'
 import { v4 as uuidv4 } from 'uuid'
 import { fromBuffer } from 'file-type'
-import { DecodeResult, ImageEncoder } from '../domain/encoder/ImageEncoder'
+import { DecodeResult, ImageEncoder } from '../encoder/ImageEncoder'
 import { readFileSync } from 'fs'
 import { INVALID_BASE64, FILE_TYPE_NOT_FOUND } from '../constant/error'
-import { Base64 } from '../domain/entity/Base64'
+import { Base64 } from '../entity/Base64'
 
 export class ImageEncoderImpl implements ImageEncoder {
   private readonly workingDir: string

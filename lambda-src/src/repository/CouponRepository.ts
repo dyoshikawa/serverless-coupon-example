@@ -1,5 +1,5 @@
 import { Coupon, CouponIndex } from '../entity/Coupon'
-import { SearchCouponResult } from '../../application/CouponApplication'
+import { SearchCouponResult } from '../application/CouponApplication'
 import { StartKey } from '../entity/StartKey'
 import { PagePer } from '../entity/PagePer'
 import { Keyword } from '../entity/Keyword'

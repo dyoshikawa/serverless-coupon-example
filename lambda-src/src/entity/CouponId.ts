@@ -1,4 +1,4 @@
-import { COUPON_ID_INVALID } from '../../constant/error'
+import { COUPON_ID_INVALID } from '../constant/error'
 
 export const ID_LENGTH = 7
 

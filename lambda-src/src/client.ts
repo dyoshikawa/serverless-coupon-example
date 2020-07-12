@@ -3,7 +3,7 @@ import * as Faker from 'faker/locale/ja'
 import * as Querystring from 'querystring'
 import * as Dotenv from 'dotenv'
 import { ImageEncoderImpl } from './infrastructure/ImageEncoderImpl'
-import { ImageEncoder } from './domain/encoder/ImageEncoder'
+import { ImageEncoder } from './encoder/ImageEncoder'
 
 type Container = {
   imageEncoder: ImageEncoder

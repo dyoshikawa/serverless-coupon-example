@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk'
-import { CouponStorage } from '../domain/storage/CouponStorage'
-import { Url } from '../domain/entity/Url'
+import { CouponStorage } from '../storage/CouponStorage'
+import { Url } from '../entity/Url'
 
 export class CouponS3Storage implements CouponStorage {
   private readonly s3Client: AWS.S3

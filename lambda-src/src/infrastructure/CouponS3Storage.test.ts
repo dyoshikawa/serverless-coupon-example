@@ -2,7 +2,7 @@ import * as AWS from 'aws-sdk'
 import { S3BucketDefiner } from './S3BucketDefiner'
 import { CouponS3Storage } from './CouponS3Storage'
 import { readFileSync } from 'fs'
-import { Url } from '../domain/entity/Url'
+import { Url } from '../entity/Url'
 
 describe('CouponS3Storage', () => {
   const s3Client = new AWS.S3({

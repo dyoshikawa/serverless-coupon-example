@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk'
-import { Tokenizer } from '../domain/tokenier/Tokenizer'
+import { Tokenizer } from '../tokenier/Tokenizer'
 
 export class ComprehendTokenizer implements Tokenizer {
   private comprehendClient: AWS.Comprehend

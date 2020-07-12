@@ -1,11 +1,11 @@
-import { Coupon, CouponIndex } from '../domain/entity/Coupon'
-import { Keyword } from '../domain/entity/Keyword'
-import { PagePer } from '../domain/entity/PagePer'
-import { StartKey } from '../domain/entity/StartKey'
-import { Base64 } from '../domain/entity/Base64'
-import { CouponDescription } from '../domain/entity/CouponDescription'
-import { CouponTitle } from '../domain/entity/CouponTitle'
-import { CouponId } from '../domain/entity/CouponId'
+import { Coupon, CouponIndex } from '../entity/Coupon'
+import { Keyword } from '../entity/Keyword'
+import { PagePer } from '../entity/PagePer'
+import { StartKey } from '../entity/StartKey'
+import { Base64 } from '../entity/Base64'
+import { CouponDescription } from '../entity/CouponDescription'
+import { CouponTitle } from '../entity/CouponTitle'
+import { CouponId } from '../entity/CouponId'
 
 export type SearchCouponResult = {
   coupons: Array<Coupon>

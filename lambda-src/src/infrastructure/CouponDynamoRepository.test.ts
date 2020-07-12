@@ -2,8 +2,8 @@ import * as AWS from 'aws-sdk'
 import dayjs from 'dayjs'
 import { DynamoTableDefiner } from './DynamoTableDefiner'
 import { CouponDynamoRepository } from './CouponDynamoRepository'
-import { CouponStorage } from '../domain/storage/CouponStorage'
-import { Time } from '../domain/time/Time'
+import { CouponStorage } from '../storage/CouponStorage'
+import { Time } from '../time/Time'
 import {
   anyString,
   anything,
@@ -13,11 +13,11 @@ import {
   when,
 } from 'ts-mockito'
 import { COUPON_NOT_FOUND } from '../constant/error'
-import { CouponId } from '../domain/entity/CouponId'
-import { CouponTitle } from '../domain/entity/CouponTitle'
-import { CouponDescription } from '../domain/entity/CouponDescription'
-import { Keyword } from '../domain/entity/Keyword'
-import { Url } from '../domain/entity/Url'
+import { CouponId } from '../entity/CouponId'
+import { CouponTitle } from '../entity/CouponTitle'
+import { CouponDescription } from '../entity/CouponDescription'
+import { Keyword } from '../entity/Keyword'
+import { Url } from '../entity/Url'
 
 describe('CouponDynamoRepository', () => {
   const tableName = 'coupon-table'
