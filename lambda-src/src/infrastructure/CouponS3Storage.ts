@@ -1,10 +1,11 @@
 import AWS from 'aws-sdk'
 import { CouponStorage } from '../storage/CouponStorage'
+import { Url } from '../entity/Url'
 
 export class CouponS3Storage implements CouponStorage {
-  private s3Client: AWS.S3
-  private bucketName: string
-  private baseUrl: string
+  private readonly s3Client: AWS.S3
+  private readonly bucketName: string
+  private readonly baseUrl: Url
 
   constructor({
     s3Client,
@@ -13,14 +14,14 @@ export class CouponS3Storage implements CouponStorage {
   }: {
     s3Client: AWS.S3
     bucketName: string
-    baseUrl: string
+    baseUrl: Url
   }) {
     this.s3Client = s3Client
     this.bucketName = bucketName
     this.baseUrl = baseUrl
   }
 
-  async save(buf: Buffer, fileName: string): Promise<string> {
+  async save(buf: Buffer, fileName: string): Promise<Url> {
     await this.s3Client
       .putObject({
         Bucket: this.bucketName,
@@ -29,6 +30,6 @@ export class CouponS3Storage implements CouponStorage {
       })
       .promise()
       .catch((e) => Promise.reject(e))
-    return Promise.resolve(`${this.baseUrl}/${fileName}`)
+    return Promise.resolve(new Url(`${this.baseUrl}/${fileName}`))
   }
 }

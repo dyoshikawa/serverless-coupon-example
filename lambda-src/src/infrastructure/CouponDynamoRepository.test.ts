@@ -13,6 +13,11 @@ import {
   when,
 } from 'ts-mockito'
 import { COUPON_NOT_FOUND } from '../constant/error'
+import { CouponId } from '../entity/CouponId'
+import { CouponTitle } from '../entity/CouponTitle'
+import { CouponDescription } from '../entity/CouponDescription'
+import { Keyword } from '../entity/Keyword'
+import { Url } from '../entity/Url'
 
 describe('CouponDynamoRepository', () => {
   const tableName = 'coupon-table'
@@ -72,10 +77,10 @@ describe('CouponDynamoRepository', () => {
 
   it('クーポンを作成し、作成したクーポンをID指定で取得する', async () => {
     when(mockedCouponStorage.save(anything(), 'image.png')).thenResolve(
-      'https://example.com/image.png'
+      new Url('https://example.com/image.png')
     )
     when(mockedCouponStorage.save(anything(), 'qr_code.jpg')).thenResolve(
-      'https://example.com/qr_code.png'
+      new Url('https://example.com/qr_code.png')
     )
     when(mockedTime.now()).thenReturn(dayjs('2020-01-01').toDate())
     when(mockedTime.format(anything(), anyString())).thenReturn('2020-01-01')
@@ -94,20 +99,22 @@ describe('CouponDynamoRepository', () => {
     })
 
     await couponDynamoRepository.save({
-      id: '0000001',
-      title: 'タイトル',
-      description: '説明',
+      id: new CouponId('0000001'),
+      title: new CouponTitle('タイトル'),
+      description: new CouponDescription('説明'),
       imageFile: Buffer.from('DUMMY'),
       imageName: 'image.png',
       qrCodeFile: Buffer.from('DUMMY'),
       qrCodeName: 'qr_code.jpg',
     })
-    expect(await couponDynamoRepository.findById('0000001')).toEqual({
-      id: '0000001',
-      title: 'タイトル',
-      description: '説明',
-      imageUrl: 'https://example.com/image.png',
-      qrCodeUrl: 'https://example.com/qr_code.png',
+    expect(
+      await couponDynamoRepository.findById(new CouponId('0000001'))
+    ).toEqual({
+      id: new CouponId('0000001'),
+      title: new CouponTitle('タイトル'),
+      description: new CouponDescription('説明'),
+      imageUrl: new Url('https://example.com/image.png'),
+      qrCodeUrl: new Url('https://example.com/qr_code.png'),
       savedAt: dayjs('2020-01-01').toDate(),
     })
   })
@@ -122,17 +129,17 @@ describe('CouponDynamoRepository', () => {
       couponStorage,
       time,
     })
-    await expect(couponDynamoRepository.findById('0000001')).rejects.toThrow(
-      COUPON_NOT_FOUND
-    )
+    await expect(
+      couponDynamoRepository.findById(new CouponId('0000001'))
+    ).rejects.toThrow(COUPON_NOT_FOUND)
   })
 
   it('クーポンとクーポンインデックスを作成し、キーワード検索でクーポンを取得する (1件)', async () => {
     when(mockedCouponStorage.save(anything(), 'image.png')).thenResolve(
-      'https://example.com/image.png'
+      new Url('https://example.com/image.png')
     )
     when(mockedCouponStorage.save(anything(), 'qr_code.jpg')).thenResolve(
-      'https://example.com/qr_code.png'
+      new Url('https://example.com/qr_code.png')
     )
     when(mockedTime.now()).thenReturn(dayjs('2020-01-01').toDate())
     when(mockedTime.format(anything(), anyString())).thenReturn('2020-01-01')
@@ -151,9 +158,9 @@ describe('CouponDynamoRepository', () => {
     })
 
     await couponDynamoRepository.save({
-      id: '0000001',
-      title: '【秋葉原店】全商品 10% OFF!',
-      description: '説明',
+      id: new CouponId('0000001'),
+      title: new CouponTitle('【秋葉原店】全商品 10% OFF!'),
+      description: new CouponDescription('説明'),
       imageFile: Buffer.from('DUMMY'),
       imageName: 'image.png',
       qrCodeFile: Buffer.from('DUMMY'),
@@ -162,29 +169,29 @@ describe('CouponDynamoRepository', () => {
     await couponDynamoRepository
       .saveIndexes([
         {
-          key: '秋葉原店',
-          couponId: '0000001',
+          key: new Keyword('秋葉原店'),
+          couponId: new CouponId('0000001'),
         },
         {
-          key: '商品',
-          couponId: '0000001',
+          key: new Keyword('商品'),
+          couponId: new CouponId('0000001'),
         },
         {
-          key: 'OFF',
-          couponId: '0000001',
+          key: new Keyword('10%'),
+          couponId: new CouponId('0000001'),
         },
       ])
       .catch((e) => console.error(e))
-    const { coupons } = await couponDynamoRepository.findByWord({
-      word: '秋葉原店',
+    const { coupons } = await couponDynamoRepository.findByKeyword({
+      keyword: new Keyword('秋葉原店'),
     })
     expect(coupons).toEqual([
       {
-        id: '0000001',
-        title: '【秋葉原店】全商品 10% OFF!',
-        description: '説明',
-        imageUrl: 'https://example.com/image.png',
-        qrCodeUrl: 'https://example.com/qr_code.png',
+        id: new CouponId('0000001'),
+        title: new CouponTitle('【秋葉原店】全商品 10% OFF!'),
+        description: new CouponDescription('説明'),
+        imageUrl: new Url('https://example.com/image.png'),
+        qrCodeUrl: new Url('https://example.com/qr_code.png'),
         savedAt: dayjs('2020-01-01').toDate(),
       },
     ])
@@ -192,10 +199,10 @@ describe('CouponDynamoRepository', () => {
 
   it('ID指定したクーポンに紐づく既存インデックスを削除する', async () => {
     when(mockedCouponStorage.save(anything(), 'image.png')).thenResolve(
-      'https://example.com/image.png'
+      new Url('https://example.com/image.png')
     )
     when(mockedCouponStorage.save(anything(), 'qr_code.jpg')).thenResolve(
-      'https://example.com/qr_code.png'
+      new Url('https://example.com/qr_code.png')
     )
     when(mockedTime.now()).thenReturn(dayjs('2020-01-01').toDate())
     when(mockedTime.format(anything(), anyString())).thenReturn('2020-01-01')
@@ -217,20 +224,20 @@ describe('CouponDynamoRepository', () => {
     await couponDynamoRepository
       .saveIndexes([
         {
-          key: '秋葉原店',
-          couponId: '0000001',
+          key: new Keyword('秋葉原店'),
+          couponId: new CouponId('0000001'),
         },
         {
-          key: '商品',
-          couponId: '0000001',
+          key: new Keyword('商品'),
+          couponId: new CouponId('0000001'),
         },
         {
-          key: 'OFF',
-          couponId: '0000001',
+          key: new Keyword('OFF'),
+          couponId: new CouponId('0000001'),
         },
         {
-          key: '広島店',
-          couponId: '0000002', // 削除対象外
+          key: new Keyword('広島店'),
+          couponId: new CouponId('0000002'), // 削除対象外
         },
       ])
       .catch((e) => console.error(e))
@@ -238,7 +245,7 @@ describe('CouponDynamoRepository', () => {
 
     // 検索と削除
     const couponIndexes = await couponDynamoRepository.findIndexesByCouponId(
-      '0000001'
+      new CouponId('0000001')
     )
     await couponDynamoRepository.destroyIndexes(couponIndexes)
     // 削除対象外の1件は残る

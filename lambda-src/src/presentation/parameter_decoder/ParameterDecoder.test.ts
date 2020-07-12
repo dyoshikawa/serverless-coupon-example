@@ -1,12 +1,12 @@
 import {
-  decodeCreateCouponParams,
-  decodeFindCouponById,
-  DecodeSearchCouponParams,
-  decodeSearchCouponParams,
+  decodeCreateCouponInput,
+  decodeFindCouponByIdInput,
+  decodeSearchCouponInput,
+  DecodeSearchCouponInputParams,
 } from './ParameterDecoder'
 import {
   COUPON_ID_NOT_GIVEN,
-  COUPON_TITLE_EMPTY,
+  COUPON_TITLE_INVALID,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
   PARAMS_NOT_GIVEN,
@@ -14,47 +14,56 @@ import {
   SEARCH_KEYWORD_NOT_GIVEN,
   START_KEY_INVALID,
 } from '../../constant/error'
+import { jpgBase64, pngBase64 } from '../../test/Base64String'
+import { Keyword } from '../../entity/Keyword'
+import { CouponId } from '../../entity/CouponId'
+import { PagePer } from '../../entity/PagePer'
+import { CouponTitle } from '../../entity/CouponTitle'
+import { CouponDescription } from '../../entity/CouponDescription'
+import { Base64 } from '../../entity/Base64'
 
 describe('ParameterDecoder', () => {
-  describe('decodeFindCouponId', () => {
-    it('クーポンIDの文字列を渡した場合、文字列をそのまま返す', () => {
-      expect(decodeFindCouponById('0000001')).toBe('0000001')
+  describe('decodeFindCouponByIdInput', () => {
+    it('クーポンIDの文字列を渡した場合、CouponIdインスタンスとして返す', () => {
+      expect(decodeFindCouponByIdInput('0000001')).toEqual(
+        new CouponId('0000001')
+      )
     })
 
     it('undefinedを渡した場合、エラーを投げる', () => {
       expect(() => {
-        decodeFindCouponById(undefined)
+        decodeFindCouponByIdInput(undefined)
       }).toThrow(new Error(COUPON_ID_NOT_GIVEN))
     })
   })
 
-  describe('decodeFindCouponId', () => {
+  describe('decodeSearchCouponInput', () => {
     it('全パラメータを満たして渡した場合、変換して返す', () => {
-      const params: DecodeSearchCouponParams = {
+      const params: DecodeSearchCouponInputParams = {
         keyword: 'キーワード',
         per: '5',
         startKeyKey: 'キーワード',
         startKeyCouponId: '0000001',
       }
-      expect(decodeSearchCouponParams(params)).toEqual({
-        keyword: 'キーワード',
-        per: 5,
+      expect(decodeSearchCouponInput(params)).toEqual({
+        keyword: new Keyword('キーワード'),
+        per: new PagePer(5),
         startKey: {
-          key: 'キーワード',
-          couponId: '0000001',
+          key: new Keyword('キーワード'),
+          couponId: new CouponId('0000001'),
         },
       })
     })
 
     it('nullを渡した場合、エラーを投げる', () => {
       expect(() => {
-        decodeSearchCouponParams(null)
+        decodeSearchCouponInput(null)
       }).toThrow(new Error(PARAMS_NOT_GIVEN))
     })
 
     it('キーワードを渡さなかった場合、エラーを投げる', () => {
       expect(() => {
-        decodeSearchCouponParams({
+        decodeSearchCouponInput({
           keyword: undefined,
         })
       }).toThrow(new Error(SEARCH_KEYWORD_NOT_GIVEN))
@@ -62,7 +71,7 @@ describe('ParameterDecoder', () => {
 
     it('perを数値変換できない文字列で渡した場合、エラーを投げる', () => {
       expect(() => {
-        decodeSearchCouponParams({
+        decodeSearchCouponInput({
           keyword: 'キーワード',
           per: '五',
         })
@@ -71,7 +80,7 @@ describe('ParameterDecoder', () => {
 
     it('startKeyを片方だけ渡した場合、エラーを投げる', () => {
       expect(() => {
-        decodeSearchCouponParams({
+        decodeSearchCouponInput({
           keyword: 'キーワード',
           startKeyKey: 'キーワード',
         })
@@ -79,28 +88,28 @@ describe('ParameterDecoder', () => {
     })
   })
 
-  describe('decodeCreateCouponParams', () => {
+  describe('decodeCreateCouponInput', () => {
     it('全パラメータを満たし、文字列で渡した場合、Objectに変換して返す', () => {
       const params = {
         id: '0000001',
         title: 'タイトル',
         description: '説明',
-        image: 'DUMMY',
-        qrCode: 'DUMMY',
+        image: pngBase64,
+        qrCode: jpgBase64,
       }
-      const [ok, res] = decodeCreateCouponParams(JSON.stringify(params))
+      const [ok, res] = decodeCreateCouponInput(JSON.stringify(params))
       expect(ok).toBe(true)
       expect(res).toEqual({
-        id: '0000001',
-        title: 'タイトル',
-        description: '説明',
-        image: 'DUMMY',
-        qrCode: 'DUMMY',
+        id: new CouponId('0000001'),
+        title: new CouponTitle('タイトル'),
+        description: new CouponDescription('説明'),
+        image: new Base64(pngBase64),
+        qrCode: new Base64(jpgBase64),
       })
     })
 
     it('JSONでない文字列を渡した場合、エラー配列を返す', () => {
-      const [ok, res] = decodeCreateCouponParams('JSONでない文字列')
+      const [ok, res] = decodeCreateCouponInput('JSONでない文字列')
       expect(ok).toBe(false)
       expect(res).toEqual([INVALID_JSON])
     })
@@ -109,10 +118,10 @@ describe('ParameterDecoder', () => {
       const params = {
         id: '0000001',
         description: '説明',
-        image: 'DUMMY',
-        qrCode: 'DUMMY',
+        image: pngBase64,
+        qrCode: jpgBase64,
       }
-      const [ok, res] = decodeCreateCouponParams(JSON.stringify(params))
+      const [ok, res] = decodeCreateCouponInput(JSON.stringify(params))
       expect(ok).toBe(false)
       expect(res).toEqual([COUPON_TITLE_NOT_GIVEN])
     })
@@ -122,12 +131,12 @@ describe('ParameterDecoder', () => {
         id: '0000001',
         title: '',
         description: '説明',
-        image: 'DUMMY',
-        qrCode: 'DUMMY',
+        image: pngBase64,
+        qrCode: jpgBase64,
       }
-      const [ok, res] = decodeCreateCouponParams(JSON.stringify(params))
+      const [ok, res] = decodeCreateCouponInput(JSON.stringify(params))
       expect(ok).toBe(false)
-      expect(res).toEqual([COUPON_TITLE_EMPTY])
+      expect(res).toEqual([COUPON_TITLE_INVALID])
     })
   })
 })

@@ -1,100 +1,121 @@
 import {
-  COUPON_DESCRIPTION_EMPTY,
-  COUPON_DESCRIPTION_INVALID,
   COUPON_DESCRIPTION_NOT_GIVEN,
-  COUPON_ID_EMPTY,
-  COUPON_ID_INVALID,
   COUPON_ID_NOT_GIVEN,
-  COUPON_IMAGE_EMPTY,
   COUPON_IMAGE_NOT_GIVEN,
-  COUPON_QR_CODE_EMPTY,
   COUPON_QR_CODE_NOT_GIVEN,
-  COUPON_TITLE_EMPTY,
-  COUPON_TITLE_INVALID,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
   PARAMS_NOT_GIVEN,
   PER_INVALID,
   SEARCH_KEYWORD_NOT_GIVEN,
   START_KEY_INVALID,
+  UNDEFINED_ERROR,
 } from '../../constant/error'
-import {
-  ID_LENGTH,
-  MAX_DESCRIPTION_LENGTH,
-  MAX_TITLE_LENGTH,
-} from '../../entity/Coupon'
 
-export const decodeFindCouponById = (couponId: string | undefined): string => {
+import { CouponDescription } from '../../entity/CouponDescription'
+import { CouponTitle } from '../../entity/CouponTitle'
+import { CouponId } from '../../entity/CouponId'
+import { Base64 } from '../../entity/Base64'
+import { StartKey } from '../../entity/StartKey'
+import { Keyword } from '../../entity/Keyword'
+import { PagePer } from '../../entity/PagePer'
+
+export const decodeFindCouponByIdInput = (
+  couponId: string | undefined
+): CouponId => {
   if (couponId === undefined) throw new Error(COUPON_ID_NOT_GIVEN)
-  return couponId
+  let id: CouponId | undefined = undefined
+  try {
+    id = new CouponId(couponId)
+  } catch (e) {
+    throw new Error(e)
+  }
+  return id
 }
 
-export type DecodeSearchCouponParams = {
+export type DecodeSearchCouponInputParams = {
   keyword?: string
   per?: string
   startKeyKey?: string
   startKeyCouponId?: string
 } | null
 
-export type DecodeSearchCouponResult = {
-  keyword: string
-  per: number | undefined
-  startKey: { key: string; couponId: string } | undefined
+export type DecodeSearchCouponInputResult = {
+  keyword: Keyword
+  per: PagePer | undefined
+  startKey: StartKey | undefined
 }
 
-export const decodeSearchCouponParams = (
-  params: DecodeSearchCouponParams
-): {
-  keyword: string
-  per: number | undefined
-  startKey: { key: string; couponId: string } | undefined
-} => {
+export const decodeSearchCouponInput = (
+  params: DecodeSearchCouponInputParams
+): DecodeSearchCouponInputResult => {
   if (params === null) throw new Error(PARAMS_NOT_GIVEN)
   if (params.keyword === undefined || params.keyword === '')
     throw new Error(SEARCH_KEYWORD_NOT_GIVEN)
+
+  let keyword: Keyword | undefined = undefined
+  try {
+    keyword = new Keyword(params.keyword)
+  } catch (e) {
+    throw new Error(e.message)
+  }
 
   const startKeysCount = [params.startKeyKey, params.startKeyCouponId].filter(
     (item) => item !== undefined
   ).length
 
-  // 2つのStartKeyの片方だけ渡されるのはNG
-  if (startKeysCount === 1) throw new Error(START_KEY_INVALID)
+  let startKey: StartKey | undefined = undefined
+  switch (startKeysCount) {
+    case 0:
+      break
+    case 1: {
+      // 2つのStartKeyの片方だけ渡されるのはNG
+      if (startKeysCount === 1) throw new Error(START_KEY_INVALID)
+      break
+    }
+    case 2: {
+      let key: Keyword | undefined = undefined
+      let couponId: CouponId | undefined = undefined
+      try {
+        key = new Keyword(params.startKeyKey as string)
+        couponId = new CouponId(params.startKeyCouponId as string)
+      } catch (e) {
+        throw new Error(e.message)
+      }
+      startKey = new StartKey(key, couponId)
+      break
+    }
+    default:
+      throw new Error(UNDEFINED_ERROR)
+  }
 
-  const startKey =
-    startKeysCount === 2
-      ? {
-          key: params.startKeyKey as string,
-          couponId: params.startKeyCouponId as string,
-        }
-      : undefined
-
-  let per: number | undefined = undefined
+  let per: PagePer | undefined = undefined
   if (params.per !== undefined) {
     if (isNaN(Number(params.per))) throw new Error(PER_INVALID)
-    per = parseInt(params.per)
+    per = new PagePer(parseInt(params.per))
   }
 
   return {
-    keyword: params.keyword,
+    keyword,
     per,
     startKey,
   }
 }
 
-export type DecodeCreateCouponParamsResult = {
-  id: string
-  title: string
-  description: string
-  image: string
-  qrCode: string
+export type DecodeCreateCouponInputResult = {
+  id: CouponId
+  title: CouponTitle
+  description: CouponDescription
+  image: Base64
+  qrCode: Base64
 }
 
-export type DecodeCreateCouponParamsErrors = Array<string>
+export type DecodeCreateCouponInputErrors = Array<string>
 export type Ok = boolean
 
-export const decodeCreateCouponParams = (
+export const decodeCreateCouponInput = (
   body: string | null
-): [Ok, DecodeCreateCouponParamsResult | DecodeCreateCouponParamsErrors] => {
+): [Ok, DecodeCreateCouponInputResult | DecodeCreateCouponInputErrors] => {
   if (body === null) return [false, [PARAMS_NOT_GIVEN]]
 
   let params:
@@ -119,40 +140,74 @@ export const decodeCreateCouponParams = (
   }
 
   const errs: Array<string> = []
+
+  let id: CouponId | undefined = undefined
   if (params.id === undefined) {
     errs.push(COUPON_ID_NOT_GIVEN)
   } else {
-    if (params.id === '') errs.push(COUPON_ID_EMPTY)
-    if (params.id.length !== ID_LENGTH || isNaN(Number(params.id)))
-      errs.push(COUPON_ID_INVALID)
+    try {
+      id = new CouponId(params.id)
+    } catch (e) {
+      errs.push(e.message)
+    }
   }
 
+  let title: CouponTitle | undefined = undefined
   if (params.title === undefined) {
     errs.push(COUPON_TITLE_NOT_GIVEN)
   } else {
-    if (params.title === '') errs.push(COUPON_TITLE_EMPTY)
-    if (params.title.length > MAX_TITLE_LENGTH) errs.push(COUPON_TITLE_INVALID)
+    try {
+      title = new CouponTitle(params.title)
+    } catch (e) {
+      errs.push(e.message)
+    }
   }
 
+  let description: CouponDescription | undefined = undefined
   if (params.description === undefined) {
     errs.push(COUPON_DESCRIPTION_NOT_GIVEN)
   } else {
-    if (params.description === '') errs.push(COUPON_DESCRIPTION_EMPTY)
-    if (params.description.length > MAX_DESCRIPTION_LENGTH)
-      errs.push(COUPON_DESCRIPTION_INVALID)
+    try {
+      description = new CouponDescription(params.description)
+    } catch (e) {
+      errs.push(e.message)
+    }
   }
 
-  if (params.image === undefined) errs.push(COUPON_IMAGE_NOT_GIVEN)
-  if (params.image !== undefined && params.image === '')
-    errs.push(COUPON_IMAGE_EMPTY)
+  let image: Base64 | undefined = undefined
+  if (params.image === undefined) {
+    errs.push(COUPON_IMAGE_NOT_GIVEN)
+  } else {
+    try {
+      image = new Base64(params.image)
+    } catch (e) {
+      errs.push(e.message)
+    }
+  }
 
-  if (params.qrCode === undefined) errs.push(COUPON_QR_CODE_NOT_GIVEN)
-  if (params.qrCode !== undefined && params.qrCode === '')
-    errs.push(COUPON_QR_CODE_EMPTY)
+  let qrCode: Base64 | undefined = undefined
+  if (params.qrCode === undefined) {
+    errs.push(COUPON_QR_CODE_NOT_GIVEN)
+  } else {
+    try {
+      qrCode = new Base64(params.qrCode)
+    } catch (e) {
+      errs.push(e.message)
+    }
+  }
 
   if (errs.length > 0) {
     return [false, errs]
   } else {
-    return [true, params as DecodeCreateCouponParamsResult]
+    return [
+      true,
+      {
+        id,
+        title,
+        description,
+        image,
+        qrCode,
+      } as DecodeCreateCouponInputResult,
+    ]
   }
 }

@@ -2,8 +2,8 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { bootstrap } from '../../bootstrap'
 import { requestError, response, serverError } from '../http/response'
 import {
-  decodeSearchCouponParams,
-  DecodeSearchCouponResult,
+  decodeSearchCouponInput,
+  DecodeSearchCouponInputResult,
 } from '../parameter_decoder/ParameterDecoder'
 import {
   PARAMS_NOT_GIVEN,
@@ -21,9 +21,9 @@ export const searchCoupon = async (
     startKeyKey?: string
     startKeyCouponId?: string
   } | null
-  let decodedParams: DecodeSearchCouponResult
+  let decodedParams: DecodeSearchCouponInputResult
   try {
-    decodedParams = decodeSearchCouponParams(params)
+    decodedParams = decodeSearchCouponInput(params)
   } catch (e) {
     switch (e.message) {
       case PARAMS_NOT_GIVEN:
@@ -42,20 +42,26 @@ export const searchCoupon = async (
     }
   }
 
-  const { couponService } = bootstrap()
-  return await couponService
+  const { couponApplication, jsonSerializer } = bootstrap()
+  return await couponApplication
     .search({
       keyword: decodedParams.keyword,
       per: decodedParams.per,
       startKey: decodedParams.startKey,
     })
     .then((res) =>
-      response(res.coupons, {
-        headers: {
-          'x-coupon-start-key-key': encodeURI(res.startKey?.key || ''),
-          'x-coupon-start-key-coupon-id': res.startKey?.couponId || '',
-        },
-      })
+      response(
+        res.coupons.map((coupon) => jsonSerializer.toCouponJson(coupon)),
+        {
+          headers: {
+            'x-coupon-start-key-key': encodeURI(
+              res.startKey?.toObject().key || ''
+            ),
+            'x-coupon-start-key-coupon-id':
+              res.startKey?.toObject().couponId || '',
+          },
+        }
+      )
     )
     .catch((e) => {
       console.error(e)

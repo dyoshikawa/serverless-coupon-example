@@ -9,7 +9,7 @@ import { ResourceId } from './ResourceId'
 const defaultLambdaProps: lambda.FunctionProps = {
   runtime: lambda.Runtime.NODEJS_12_X,
   handler: '',
-  code: lambda.Code.fromAsset('../lambda-src/dist'),
+  code: lambda.Code.fromAsset('../lambda-src/dist/lambda'),
   functionName: '',
   environment: {},
 }
@@ -45,7 +45,6 @@ export const createCreateCouponLambda = ({
     createCouponLambdaId.toString(),
     {
       ...defaultLambdaProps,
-      code: lambda.Code.fromAsset('../lambda-src/dist/createCoupon'),
       handler: 'bundle.createCoupon',
       functionName: createCouponLambdaId.toString(),
       environment,
@@ -76,7 +75,6 @@ export const createCreateCouponIndexLambda = ({
     createCouponIndexLambdaId.toString(),
     {
       ...defaultLambdaProps,
-      code: lambda.Code.fromAsset('../lambda-src/dist/createCouponIndex'),
       handler: 'bundle.createCouponIndex',
       functionName: createCouponIndexLambdaId.toString(),
       environment,
@@ -116,7 +114,6 @@ export const createSearchCouponLambda = ({
     searchCouponLambdaId.toString(),
     {
       ...defaultLambdaProps,
-      code: lambda.Code.fromAsset('../lambda-src/dist/searchCoupon'),
       handler: 'bundle.searchCoupon',
       functionName: searchCouponLambdaId.toString(),
       environment,
@@ -144,7 +141,6 @@ export const createFindCouponById = ({
     findCouponByIdLambdaId.toString(),
     {
       ...defaultLambdaProps,
-      code: lambda.Code.fromAsset('../lambda-src/dist/findCouponById'),
       handler: 'bundle.findCouponById',
       functionName: findCouponByIdLambdaId.toString(),
       environment,
