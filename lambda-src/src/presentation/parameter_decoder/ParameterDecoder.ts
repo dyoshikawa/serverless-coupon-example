@@ -71,6 +71,7 @@ export const decodeSearchCouponInput = (
     case 1: {
       // 2つのStartKeyの片方だけ渡されるのはNG
       if (startKeysCount === 1) throw new Error(START_KEY_INVALID)
+      break
     }
     case 2: {
       let key: CouponIndexKey | undefined = undefined

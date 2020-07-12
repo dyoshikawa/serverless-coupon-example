@@ -1,5 +1,7 @@
 import { AttributeValue, DynamoDBStreamEvent } from 'aws-lambda'
 import { bootstrap } from '../../bootstrap'
+import { CouponId } from '../../entity/CouponId'
+import { CouponTitle } from '../../entity/CouponTitle'
 
 export const createCouponIndex = async (
   event: DynamoDBStreamEvent
@@ -24,7 +26,10 @@ export const createCouponIndex = async (
           return Promise.reject(new Error('Undefined: newItem.title.S'))
 
         await couponService
-          .createIndexes(newItem.id.S, newItem.title.S)
+          .createIndexes(
+            new CouponId(newItem.id.S),
+            new CouponTitle(newItem.title.S)
+          )
           .catch((e) => Promise.reject(e))
         break
       }
@@ -60,7 +65,7 @@ export const createCouponIndex = async (
           return Promise.reject(new Error('Undefined: newItem.id.S'))
 
         await couponService
-          .destroyIndexes(oldItem.id.S)
+          .destroyIndexes(new CouponId(oldItem.id.S))
           .catch((e) => Promise.reject(e))
         break
       }

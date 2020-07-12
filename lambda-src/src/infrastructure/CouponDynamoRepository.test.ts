@@ -77,10 +77,10 @@ describe('CouponDynamoRepository', () => {
 
   it('クーポンを作成し、作成したクーポンをID指定で取得する', async () => {
     when(mockedCouponStorage.save(anything(), 'image.png')).thenResolve(
-      'https://example.com/image.png'
+      new Url('https://example.com/image.png')
     )
     when(mockedCouponStorage.save(anything(), 'qr_code.jpg')).thenResolve(
-      'https://example.com/qr_code.png'
+      new Url('https://example.com/qr_code.png')
     )
     when(mockedTime.now()).thenReturn(dayjs('2020-01-01').toDate())
     when(mockedTime.format(anything(), anyString())).thenReturn('2020-01-01')
@@ -136,10 +136,10 @@ describe('CouponDynamoRepository', () => {
 
   it('クーポンとクーポンインデックスを作成し、キーワード検索でクーポンを取得する (1件)', async () => {
     when(mockedCouponStorage.save(anything(), 'image.png')).thenResolve(
-      'https://example.com/image.png'
+      new Url('https://example.com/image.png')
     )
     when(mockedCouponStorage.save(anything(), 'qr_code.jpg')).thenResolve(
-      'https://example.com/qr_code.png'
+      new Url('https://example.com/qr_code.png')
     )
     when(mockedTime.now()).thenReturn(dayjs('2020-01-01').toDate())
     when(mockedTime.format(anything(), anyString())).thenReturn('2020-01-01')
@@ -199,10 +199,10 @@ describe('CouponDynamoRepository', () => {
 
   it('ID指定したクーポンに紐づく既存インデックスを削除する', async () => {
     when(mockedCouponStorage.save(anything(), 'image.png')).thenResolve(
-      'https://example.com/image.png'
+      new Url('https://example.com/image.png')
     )
     when(mockedCouponStorage.save(anything(), 'qr_code.jpg')).thenResolve(
-      'https://example.com/qr_code.png'
+      new Url('https://example.com/qr_code.png')
     )
     when(mockedTime.now()).thenReturn(dayjs('2020-01-01').toDate())
     when(mockedTime.format(anything(), anyString())).thenReturn('2020-01-01')

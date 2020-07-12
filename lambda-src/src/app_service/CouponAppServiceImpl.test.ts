@@ -13,7 +13,14 @@ import { CouponRepository } from '../repository/CouponRepository'
 import { ImageEncoder } from '../encoder/ImageEncoder'
 import { Tokenizer } from '../tokenier/Tokenizer'
 import { COUPON_NOT_FOUND } from '../constant/error'
+import { CouponId } from '../entity/CouponId'
+import { CouponTitle } from '../entity/CouponTitle'
+import { buildCoupon, buildCouponIndex } from '../test/factory/CouponFactory'
+import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { CouponDescription } from '../entity/CouponDescription'
+import { Base64 } from '../entity/Base64'
 import { Coupon } from '../entity/Coupon'
+import { jpgBase64, pngBase64 } from '../test/Base64String'
 
 describe('CouponServiceImpl', () => {
   const mockedCouponRepository = mock<CouponRepository>()
@@ -27,17 +34,9 @@ describe('CouponServiceImpl', () => {
   })
 
   describe('findById', () => {
-    const coupon = new Coupon({
-      id: '0000001',
-      title: 'タイトル',
-      description: '説明',
-      imageUrl: 'https://example.com/image.png',
-      qrCodeUrl: 'https://example.com/qrcode.jpg',
-      savedAt: dayjs('2020-01-01').toDate(),
-    })
-
     it('指定IDのクーポンを取得する', async () => {
-      when(mockedCouponRepository.findById(anyString())).thenResolve(coupon)
+      const couponId = new CouponId('0000001')
+      when(mockedCouponRepository.findById(couponId)).thenResolve(buildCoupon())
 
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
@@ -47,13 +46,14 @@ describe('CouponServiceImpl', () => {
         imageEncoder,
         tokenizer,
       })
-      const foundCoupon = await couponServiceImpl.findById('0000001')
-      expect(foundCoupon).toEqual(coupon)
-      verify(mockedCouponRepository.findById(anyString())).once()
+      const foundCoupon = await couponServiceImpl.findById(couponId)
+      expect(foundCoupon).toEqual(buildCoupon())
+      verify(mockedCouponRepository.findById(couponId)).once()
     })
 
     it('指定IDのクーポンが存在しなかった場合、COUPON_NOT_FOUNDエラーを投げる', async () => {
-      when(mockedCouponRepository.findById(anyString())).thenReject(
+      const couponId = new CouponId('0000001')
+      when(mockedCouponRepository.findById(couponId)).thenReject(
         new Error(COUPON_NOT_FOUND)
       )
 
@@ -65,24 +65,15 @@ describe('CouponServiceImpl', () => {
         imageEncoder,
         tokenizer,
       })
-      await expect(couponServiceImpl.findById('0000001')).rejects.toThrow(
+      await expect(couponServiceImpl.findById(couponId)).rejects.toThrow(
         COUPON_NOT_FOUND
       )
-      verify(mockedCouponRepository.findById(anyString())).once()
+      verify(mockedCouponRepository.findById(couponId)).once()
     })
   })
 
   describe('search', () => {
-    const coupons = [
-      new Coupon({
-        id: '0000001',
-        title: 'タイトル',
-        description: '説明',
-        imageUrl: 'https://example.com/image.png',
-        qrCodeUrl: 'https://example.com/qrcode.jpg',
-        savedAt: dayjs('2020-01-01').toDate(),
-      }),
-    ]
+    const coupons = [buildCoupon()]
     when(mockedCouponRepository.findByWord(anything())).thenResolve({
       coupons,
       startKey: undefined,
@@ -98,7 +89,7 @@ describe('CouponServiceImpl', () => {
         tokenizer,
       })
       const searchRes = await couponServiceImpl.search({
-        keyword: 'キーワード',
+        keyword: new CouponIndexKey('キーワード'),
       })
       expect(searchRes).toEqual({
         coupons,
@@ -109,17 +100,16 @@ describe('CouponServiceImpl', () => {
   })
 
   describe('create', () => {
-    when(mockedCouponRepository.save(anything())).thenResolve(
-      new Coupon({
-        id: '0000001',
-        title: 'タイトル',
-        description: '説明',
-        imageUrl: 'https://example.com/image.png',
-        qrCodeUrl: 'https://example.com/qrcode.jpg',
-        savedAt: dayjs('2020-01-01').toDate(),
-      })
-    )
-    when(mockedImageEncoder.base64Decode(anyString())).thenResolve({
+    when(mockedCouponRepository.save(anything())).thenResolve(buildCoupon())
+
+    const jpgBase64Data = new Base64(jpgBase64)
+    when(mockedImageEncoder.base64Decode(jpgBase64Data)).thenResolve({
+      file: Buffer.from('DUMMY'),
+      ext: 'jpg',
+    })
+
+    const pngBase64Data = new Base64(pngBase64)
+    when(mockedImageEncoder.base64Decode(pngBase64Data)).thenResolve({
       file: Buffer.from('DUMMY'),
       ext: 'jpg',
     })
@@ -134,36 +124,28 @@ describe('CouponServiceImpl', () => {
         tokenizer,
       })
       const coupon = await couponServiceImpl.create({
-        id: '0000001',
-        title: 'タイトル',
-        description: '説明',
-        imageBase64: 'DUMMY',
-        qrCodeBase64: 'DUMMY',
+        id: new CouponId('0000001'),
+        title: new CouponTitle('タイトル'),
+        description: new CouponDescription('説明'),
+        imageBase64: jpgBase64Data,
+        qrCodeBase64: pngBase64Data,
       })
-      expect(coupon).toEqual(
-        new Coupon({
-          id: '0000001',
-          title: 'タイトル',
-          description: '説明',
-          imageUrl: 'https://example.com/image.png',
-          qrCodeUrl: 'https://example.com/qrcode.jpg',
-          savedAt: dayjs('2020-01-01').toDate(),
-        })
-      )
-      verify(mockedImageEncoder.base64Decode(anyString())).twice()
+      expect(coupon).toEqual(buildCoupon())
+      verify(mockedImageEncoder.base64Decode(jpgBase64Data)).once()
+      verify(mockedImageEncoder.base64Decode(pngBase64Data)).once()
       verify(mockedCouponRepository.save(anything())).once()
     })
   })
 
   describe('createIndexes', () => {
     when(mockedCouponRepository.saveIndexes(anything())).thenResolve([
-      {
-        key: 'キーワード',
-        couponId: '0000001',
-        savedAt: dayjs('2020-01-01').toDate(),
-      },
+      buildCouponIndex(),
     ])
-    when(mockedTokenizer.pickWords(anyString())).thenResolve(['キーワード'])
+
+    const couponTitle = new CouponTitle('タイトル')
+    when(mockedTokenizer.pickWords(couponTitle.toString())).thenResolve([
+      'キーワード',
+    ])
 
     it('クーポンインデックスを作成し取得する', async () => {
       const couponRepository = instance(mockedCouponRepository)
@@ -175,37 +157,31 @@ describe('CouponServiceImpl', () => {
         tokenizer,
       })
       const indexes = await couponServiceImpl.createIndexes(
-        '0000001',
-        'タイトル'
+        new CouponId('0000001'),
+        couponTitle
       )
-      expect(indexes).toEqual([
-        {
-          key: 'キーワード',
-          couponId: '0000001',
-          savedAt: dayjs('2020-01-01').toDate(),
-        },
-      ])
-      verify(mockedTokenizer.pickWords(anyString())).once()
+      expect(indexes).toEqual([buildCouponIndex()])
+      verify(mockedTokenizer.pickWords(couponTitle.toString())).once()
       verify(mockedCouponRepository.saveIndexes(anything())).once()
     })
   })
 
   describe('updateIndexes', () => {
-    const couponIndexes = [
-      {
-        key: 'キーワード',
-        couponId: '0000001',
-        savedAt: dayjs('2020-01-01').toDate(),
-      },
-    ]
-    when(mockedCouponRepository.findIndexesByCouponId(anyString())).thenResolve(
+    const couponIndexes = [buildCouponIndex()]
+
+    const couponId = new CouponId('0000001')
+    when(mockedCouponRepository.findIndexesByCouponId(couponId)).thenResolve(
       couponIndexes
     )
     when(mockedCouponRepository.destroyIndexes(anything())).thenResolve()
     when(mockedCouponRepository.saveIndexes(anything())).thenResolve(
       couponIndexes
     )
-    when(mockedTokenizer.pickWords(anyString())).thenResolve(['キーワード'])
+
+    const keyword = new CouponIndexKey('タイトル')
+    when(mockedTokenizer.pickWords(keyword.toString())).thenResolve([
+      'キーワード',
+    ])
 
     it('クーポンインデックスを再作成し取得する', async () => {
       const couponRepository = instance(mockedCouponRepository)
@@ -217,28 +193,25 @@ describe('CouponServiceImpl', () => {
         tokenizer,
       })
       const indexes = await couponServiceImpl.updateIndexes(
-        '0000001',
-        'タイトル'
+        couponId,
+        new CouponTitle('タイトル')
       )
       expect(indexes).toEqual(couponIndexes)
-      verify(mockedTokenizer.pickWords(anyString())).once()
-      verify(mockedCouponRepository.findIndexesByCouponId(anyString())).once()
+      verify(mockedTokenizer.pickWords(keyword.toString())).once()
+      verify(mockedCouponRepository.findIndexesByCouponId(couponId)).once()
       verify(mockedCouponRepository.destroyIndexes(anything())).once()
       verify(mockedCouponRepository.saveIndexes(anything())).once()
     })
   })
 
   describe('destroyIndexes', () => {
-    const couponIndexes = [
-      {
-        key: 'キーワード',
-        couponId: '0000001',
-        savedAt: dayjs('2020-01-01').toDate(),
-      },
-    ]
-    when(mockedCouponRepository.findIndexesByCouponId(anyString())).thenResolve(
+    const couponIndexes = [buildCouponIndex()]
+
+    const couponId = new CouponId('0000001')
+    when(mockedCouponRepository.findIndexesByCouponId(couponId)).thenResolve(
       couponIndexes
     )
+
     when(mockedCouponRepository.destroyIndexes(anything())).thenResolve()
 
     it('指定クーポンIDのインデックスを削除する', async () => {
@@ -250,8 +223,8 @@ describe('CouponServiceImpl', () => {
         imageEncoder,
         tokenizer,
       })
-      await couponServiceImpl.destroyIndexes('0000001')
-      verify(mockedCouponRepository.findIndexesByCouponId(anyString())).once()
+      await couponServiceImpl.destroyIndexes(couponId)
+      verify(mockedCouponRepository.findIndexesByCouponId(couponId)).once()
       verify(mockedCouponRepository.destroyIndexes(anything())).once()
     })
   })

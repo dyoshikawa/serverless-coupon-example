@@ -10,21 +10,22 @@ import { ComprehendTokenizer } from './infrastructure/ComprehendTokenizer'
 import { Tokenizer } from './tokenier/Tokenizer'
 import { TimeImpl } from './infrastructure/TimeImpl'
 import { Time } from './time/Time'
-import { CouponService } from './service/CouponAppService'
-import { CouponServiceImpl } from './service/CouponAppServiceImpl'
+import { CouponAppService } from './app_service/CouponAppService'
+import { CouponAppServiceImpl } from './app_service/CouponAppServiceImpl'
+import { Url } from './entity/Url'
 
 export type Container = {
   couponStorage: CouponStorage
   couponRepository: CouponRepository
   imageEncoder: ImageEncoder
-  couponService: CouponService
+  couponService: CouponAppService
 }
 
 export const bootstrap = (): Container => {
   const couponStorage: CouponStorage = new CouponS3Storage({
     s3Client: new AWS.S3(),
     bucketName: Config.bucketName(),
-    baseUrl: `https://${Config.domainName()}`,
+    baseUrl: new Url(`https://${Config.domainName()}`),
   })
   const tokenizer: Tokenizer = new ComprehendTokenizer(new AWS.Comprehend())
   const time: Time = new TimeImpl()
@@ -36,7 +37,7 @@ export const bootstrap = (): Container => {
     time,
   })
   const imageEncoder: ImageEncoder = new ImageEncoderImpl()
-  const couponService: CouponService = new CouponServiceImpl({
+  const couponService: CouponAppService = new CouponAppServiceImpl({
     couponRepository,
     imageEncoder,
     tokenizer,

@@ -1,7 +1,10 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { bootstrap } from '../../bootstrap'
 import { requestError, response, serverError } from '../http/response'
-import {decodeSearchCouponInput, DecodeSearchCouponInputResult} from '../parameter_decoder/ParameterDecoder'
+import {
+  decodeSearchCouponInput,
+  DecodeSearchCouponInputResult,
+} from '../parameter_decoder/ParameterDecoder'
 import {
   PARAMS_NOT_GIVEN,
   PER_INVALID,
@@ -49,8 +52,11 @@ export const searchCoupon = async (
     .then((res) =>
       response(res.coupons, {
         headers: {
-          'x-coupon-start-key-key': encodeURI(res.startKey?.key || ''),
-          'x-coupon-start-key-coupon-id': res.startKey?.couponId || '',
+          'x-coupon-start-key-key': encodeURI(
+            res.startKey?.toObject().key || ''
+          ),
+          'x-coupon-start-key-coupon-id':
+            res.startKey?.toObject().couponId || '',
         },
       })
     )

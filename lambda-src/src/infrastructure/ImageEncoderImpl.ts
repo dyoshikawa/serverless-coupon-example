@@ -4,6 +4,7 @@ import { fromBuffer } from 'file-type'
 import { DecodeResult, ImageEncoder } from '../encoder/ImageEncoder'
 import { readFileSync } from 'fs'
 import { INVALID_BASE64, FILE_TYPE_NOT_FOUND } from '../constant/error'
+import { Base64 } from '../entity/Base64'
 
 export class ImageEncoderImpl implements ImageEncoder {
   private readonly workingDir: string
@@ -19,9 +20,9 @@ export class ImageEncoderImpl implements ImageEncoder {
     }).catch((e) => Promise.reject(e))
   }
 
-  async base64Decode(base64: string): Promise<DecodeResult> {
+  async base64Decode(base64: Base64): Promise<DecodeResult> {
     const tmpName = uuidv4()
-    await decode(base64, {
+    await decode(base64.toString(), {
       fname: `${this.workingDir}/${tmpName}`,
       ext: 'buf',
     }).catch((e) => {

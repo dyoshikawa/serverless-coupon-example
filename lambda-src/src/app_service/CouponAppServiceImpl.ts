@@ -98,7 +98,9 @@ export class CouponAppServiceImpl implements CouponAppService {
     if (keys.length === 0) return []
 
     return await this.couponRepository
-      .saveIndexes(keys.map((key) => ({ key, couponId: id })))
+      .saveIndexes(
+        keys.map((key) => ({ key: new CouponIndexKey(key), couponId: id }))
+      )
       .catch((e) => Promise.reject(e))
   }
 
@@ -120,7 +122,9 @@ export class CouponAppServiceImpl implements CouponAppService {
       )
       .catch((e) => Promise.reject(e))
     return await this.couponRepository
-      .saveIndexes(keys.map((key) => ({ key, couponId: id })))
+      .saveIndexes(
+        keys.map((key) => ({ key: new CouponIndexKey(key), couponId: id }))
+      )
       .catch((e) => Promise.reject(e))
   }
 

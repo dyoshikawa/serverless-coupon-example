@@ -1,4 +1,4 @@
-import isBase64 from 'validator/es/lib/isBase64'
+import isBase64 from 'validator/lib/isBase64'
 import { INVALID_BASE64 } from '../constant/error'
 
 export class Base64 {

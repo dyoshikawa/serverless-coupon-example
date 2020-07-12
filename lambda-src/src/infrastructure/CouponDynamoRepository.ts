@@ -183,8 +183,8 @@ export class CouponDynamoRepository implements CouponRepository {
       id: id.toString(),
       title: title.toString(),
       description: description.toString(),
-      imageUrl,
-      qrCodeUrl,
+      imageUrl: imageUrl.toString(),
+      qrCodeUrl: qrCodeUrl.toString(),
       savedAt: savedAt.toISOString(), // DynamoDBにDate型はないため
       savedAtDay,
     }
