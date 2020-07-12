@@ -4,7 +4,7 @@ import { CouponRepository } from '../repository/CouponRepository'
 import { CouponStorage } from '../storage/CouponStorage'
 import { Time } from '../time/Time'
 import { COUPON_NOT_FOUND } from '../constant/error'
-import { SearchCouponResult, StartKey } from '../service/CouponService'
+import { SearchCouponResult, StartKey } from '../app_service/CouponAppService'
 
 export type CouponDynamoItem = {
   id: string

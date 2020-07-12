@@ -3,9 +3,9 @@ import { CouponRepository } from '../repository/CouponRepository'
 import { ImageEncoder } from '../encoder/ImageEncoder'
 import { Tokenizer } from '../tokenier/Tokenizer'
 import { Coupon, CouponIndex } from '../entity/Coupon'
-import { CouponService, SearchCouponResult, StartKey } from './CouponService'
+import { CouponAppService, SearchCouponResult, StartKey } from './CouponAppService'
 
-export class CouponServiceImpl implements CouponService {
+export class CouponAppServiceImpl implements CouponAppService {
   private couponRepository: CouponRepository
   private imageEncoder: ImageEncoder
   private tokenizer: Tokenizer

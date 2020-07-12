@@ -1,5 +1,5 @@
 import { Coupon, CouponIndex } from '../entity/Coupon'
-import { SearchCouponResult, StartKey } from '../service/CouponService'
+import { SearchCouponResult, StartKey } from '../service/CouponAppService'
 
 export interface CouponRepository {
   findAll: () => Promise<Array<Coupon>>

@@ -6,7 +6,7 @@ export type SearchCouponResult = {
   startKey: StartKey | undefined
 }
 
-export interface CouponService {
+export interface CouponAppService {
   findById: (couponId: string) => Promise<Coupon>
   search: (params: {
     keyword: string

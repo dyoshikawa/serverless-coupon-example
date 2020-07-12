@@ -8,7 +8,7 @@ import {
   when,
 } from 'ts-mockito'
 import dayjs from 'dayjs'
-import { CouponServiceImpl } from './CouponServiceImpl'
+import { CouponAppServiceImpl } from './CouponAppServiceImpl'
 import { CouponRepository } from '../repository/CouponRepository'
 import { ImageEncoder } from '../encoder/ImageEncoder'
 import { Tokenizer } from '../tokenier/Tokenizer'
@@ -42,7 +42,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -60,7 +60,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -92,7 +92,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -128,7 +128,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -169,7 +169,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -211,7 +211,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -245,7 +245,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponServiceImpl({
+      const couponServiceImpl = new CouponAppServiceImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
