@@ -3,7 +3,14 @@ import { CouponRepository } from '../repository/CouponRepository'
 import { ImageEncoder } from '../encoder/ImageEncoder'
 import { Tokenizer } from '../tokenier/Tokenizer'
 import { Coupon, CouponIndex } from '../entity/Coupon'
-import { CouponAppService, SearchCouponResult, StartKey } from './CouponAppService'
+import { CouponAppService, SearchCouponResult } from './CouponAppService'
+import { CouponId } from '../entity/CouponId'
+import { StartKey } from '../entity/StartKey'
+import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { PagePer } from '../entity/PagePer'
+import { CouponTitle } from '../entity/CouponTitle'
+import { CouponDescription } from '../entity/CouponDescription'
+import { Base64 } from '../entity/Base64'
 
 export class CouponAppServiceImpl implements CouponAppService {
   private couponRepository: CouponRepository
@@ -24,7 +31,7 @@ export class CouponAppServiceImpl implements CouponAppService {
     this.tokenizer = tokenizer
   }
 
-  async findById(couponId: string): Promise<Coupon> {
+  async findById(couponId: CouponId): Promise<Coupon> {
     return await this.couponRepository
       .findById(couponId)
       .catch((e) => Promise.reject(e))
@@ -35,8 +42,8 @@ export class CouponAppServiceImpl implements CouponAppService {
     per,
     startKey,
   }: {
-    keyword: string
-    per?: number
+    keyword: CouponIndexKey
+    per?: PagePer
     startKey?: StartKey
   }): Promise<SearchCouponResult> {
     return await this.couponRepository
@@ -55,11 +62,11 @@ export class CouponAppServiceImpl implements CouponAppService {
     imageBase64,
     qrCodeBase64,
   }: {
-    id: string
-    title: string
-    description: string
-    imageBase64: string
-    qrCodeBase64: string
+    id: CouponId
+    title: CouponTitle
+    description: CouponDescription
+    imageBase64: Base64
+    qrCodeBase64: Base64
   }): Promise<Coupon> {
     const [decodedImage, decodedQrCode] = await Promise.all([
       this.imageEncoder.base64Decode(imageBase64),
@@ -81,9 +88,12 @@ export class CouponAppServiceImpl implements CouponAppService {
       .catch((e) => Promise.reject(e))
   }
 
-  async createIndexes(id: string, title: string): Promise<Array<CouponIndex>> {
+  async createIndexes(
+    id: CouponId,
+    title: CouponTitle
+  ): Promise<Array<CouponIndex>> {
     const keys = await this.tokenizer
-      .pickWords(title)
+      .pickWords(title.toString())
       .catch((e) => Promise.reject(e))
     if (keys.length === 0) return []
 
@@ -92,9 +102,12 @@ export class CouponAppServiceImpl implements CouponAppService {
       .catch((e) => Promise.reject(e))
   }
 
-  async updateIndexes(id: string, title: string): Promise<Array<CouponIndex>> {
+  async updateIndexes(
+    id: CouponId,
+    title: CouponTitle
+  ): Promise<Array<CouponIndex>> {
     const keys = await this.tokenizer
-      .pickWords(title)
+      .pickWords(title.toString())
       .catch((e) => Promise.reject(e))
     if (keys.length === 0) return []
 
@@ -111,7 +124,7 @@ export class CouponAppServiceImpl implements CouponAppService {
       .catch((e) => Promise.reject(e))
   }
 
-  async destroyIndexes(id: string): Promise<void> {
+  async destroyIndexes(id: CouponId): Promise<void> {
     const oldIndexes = await this.couponRepository
       .findIndexesByCouponId(id)
       .catch((e) => Promise.reject(e))

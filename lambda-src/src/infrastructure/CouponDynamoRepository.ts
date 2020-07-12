@@ -4,7 +4,14 @@ import { CouponRepository } from '../repository/CouponRepository'
 import { CouponStorage } from '../storage/CouponStorage'
 import { Time } from '../time/Time'
 import { COUPON_NOT_FOUND } from '../constant/error'
-import { SearchCouponResult, StartKey } from '../app_service/CouponAppService'
+import { SearchCouponResult } from '../app_service/CouponAppService'
+import { CouponTitle } from '../entity/CouponTitle'
+import { CouponDescription } from '../entity/CouponDescription'
+import { CouponId } from '../entity/CouponId'
+import { Url } from '../entity/Url'
+import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { StartKey } from '../entity/StartKey'
+import { PagePer } from '../entity/PagePer'
 
 export type CouponDynamoItem = {
   id: string
@@ -51,23 +58,35 @@ export class CouponDynamoRepository implements CouponRepository {
 
   private toCoupon(item: CouponDynamoItem) {
     const { id, title, description, imageUrl, qrCodeUrl, savedAt } = item
-    return new Coupon({
-      id,
-      title,
-      description,
-      imageUrl,
-      qrCodeUrl,
-      savedAt: this.time.fromString(savedAt),
-    })
+    let coupon: Coupon | undefined = undefined
+    try {
+      coupon = new Coupon({
+        id: new CouponId(id),
+        title: new CouponTitle(title),
+        description: new CouponDescription(description),
+        imageUrl: new Url(imageUrl),
+        qrCodeUrl: new Url(qrCodeUrl),
+        savedAt: this.time.fromString(savedAt),
+      })
+    } catch (e) {
+      throw e
+    }
+    return coupon
   }
 
   private toCouponIndex(item: CouponIndexDynamoItem) {
     const { key, couponId, savedAt } = item
-    return new CouponIndex({
-      key,
-      couponId,
-      savedAt: this.time.fromString(savedAt),
-    })
+    let couponIndex: CouponIndex | undefined = undefined
+    try {
+      couponIndex = new CouponIndex({
+        key: new CouponIndexKey(key),
+        couponId: new CouponId(couponId),
+        savedAt: this.time.fromString(savedAt),
+      })
+    } catch (e) {
+      throw e
+    }
+    return couponIndex
   }
 
   async findAll(): Promise<Array<Coupon>> {
@@ -83,12 +102,12 @@ export class CouponDynamoRepository implements CouponRepository {
     return couponDynamoItems.map((item) => this.toCoupon(item))
   }
 
-  async findById(id: string): Promise<Coupon> {
+  async findById(id: CouponId): Promise<Coupon> {
     const output = await this.dynamoClient
       .get({
         TableName: this.tableName,
         Key: {
-          id,
+          id: id.toString(),
         },
       })
       .promise()
@@ -103,18 +122,18 @@ export class CouponDynamoRepository implements CouponRepository {
     startKey,
     per,
   }: {
-    word: string
-    startKey?: { key: string; couponId: string }
-    per?: number
+    word: CouponIndexKey
+    startKey?: StartKey
+    per?: PagePer
   }): Promise<SearchCouponResult> {
     const output = await this.dynamoClient
       .query({
         TableName: this.indexTableName,
         ExpressionAttributeNames: { '#name': 'key' },
-        ExpressionAttributeValues: { ':val': word },
+        ExpressionAttributeValues: { ':val': word.toString() },
         KeyConditionExpression: '#name = :val',
-        ExclusiveStartKey: startKey,
-        Limit: per || 5,
+        ExclusiveStartKey: startKey?.toObject(),
+        Limit: per?.toNumber() || 5,
       })
       .promise()
       .catch((e) => Promise.reject(e))
@@ -148,9 +167,9 @@ export class CouponDynamoRepository implements CouponRepository {
     qrCodeFile,
     qrCodeName,
   }: {
-    id: string
-    title: string
-    description: string
+    id: CouponId
+    title: CouponTitle
+    description: CouponDescription
     imageFile: Buffer
     imageName: string
     qrCodeFile: Buffer
@@ -161,9 +180,9 @@ export class CouponDynamoRepository implements CouponRepository {
     const savedAt = this.time.now()
     const savedAtDay = this.time.format(savedAt, 'YYYY-MM-DD')
     const dynamoItem: CouponDynamoItem = {
-      id,
-      title,
-      description,
+      id: id.toString(),
+      title: title.toString(),
+      description: description.toString(),
       imageUrl,
       qrCodeUrl,
       savedAt: savedAt.toISOString(), // DynamoDBにDate型はないため
@@ -179,12 +198,12 @@ export class CouponDynamoRepository implements CouponRepository {
     return this.toCoupon(dynamoItem)
   }
 
-  async destroy(id: string): Promise<void> {
+  async destroy(id: CouponId): Promise<void> {
     await this.dynamoClient
       .delete({
         TableName: this.tableName,
         Key: {
-          id,
+          id: id.toString(),
         },
       })
       .promise()
@@ -205,7 +224,7 @@ export class CouponDynamoRepository implements CouponRepository {
   }
 
   async saveIndexes(
-    params: Array<{ key: string; couponId: string }>
+    params: Array<{ key: CouponIndexKey; couponId: CouponId }>
   ): Promise<Array<CouponIndex>> {
     const savedAt = this.time.now()
     const promises = params.map(({ key, couponId }) => {
@@ -213,8 +232,8 @@ export class CouponDynamoRepository implements CouponRepository {
         .put({
           TableName: this.indexTableName,
           Item: {
-            key,
-            couponId,
+            key: key.toString(),
+            couponId: couponId.toString(),
             savedAt: savedAt.toISOString(),
           },
         })
@@ -231,13 +250,13 @@ export class CouponDynamoRepository implements CouponRepository {
     )
   }
 
-  async findIndexesByCouponId(couponId: string): Promise<Array<CouponIndex>> {
+  async findIndexesByCouponId(couponId: CouponId): Promise<Array<CouponIndex>> {
     const output = await this.dynamoClient
       .query({
         TableName: this.indexTableName,
         IndexName: 'couponId-index',
         ExpressionAttributeNames: { '#name': 'couponId' },
-        ExpressionAttributeValues: { ':val': couponId },
+        ExpressionAttributeValues: { ':val': couponId.toString() },
         KeyConditionExpression: '#name = :val',
       })
       .promise()
@@ -252,8 +271,8 @@ export class CouponDynamoRepository implements CouponRepository {
 
   async destroyIndexes(
     params: Array<{
-      key: string
-      couponId: string
+      key: CouponIndexKey
+      couponId: CouponId
     }>
   ): Promise<void> {
     const promises = params.map(({ key, couponId }) => {
@@ -261,8 +280,8 @@ export class CouponDynamoRepository implements CouponRepository {
         .delete({
           TableName: this.indexTableName,
           Key: {
-            key,
-            couponId,
+            key: key.toString(),
+            couponId: couponId.toString(),
           },
         })
         .promise()

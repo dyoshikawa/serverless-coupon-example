@@ -1,26 +1,38 @@
 import { Coupon, CouponIndex } from '../entity/Coupon'
+import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { PagePer } from '../entity/PagePer'
+import { StartKey } from '../entity/StartKey'
+import { Base64 } from '../entity/Base64'
+import { CouponDescription } from '../entity/CouponDescription'
+import { CouponTitle } from '../entity/CouponTitle'
+import { CouponId } from '../entity/CouponId'
 
-export type StartKey = { key: string; couponId: string }
 export type SearchCouponResult = {
   coupons: Array<Coupon>
   startKey: StartKey | undefined
 }
 
 export interface CouponAppService {
-  findById: (couponId: string) => Promise<Coupon>
+  findById: (couponId: CouponId) => Promise<Coupon>
   search: (params: {
-    keyword: string
-    per?: number
+    keyword: CouponIndexKey
+    per?: PagePer
     startKey?: StartKey
   }) => Promise<SearchCouponResult>
   create: (params: {
-    id: string
-    title: string
-    description: string
-    imageBase64: string
-    qrCodeBase64: string
+    id: CouponId
+    title: CouponTitle
+    description: CouponDescription
+    imageBase64: Base64
+    qrCodeBase64: Base64
   }) => Promise<Coupon>
-  createIndexes: (id: string, title: string) => Promise<Array<CouponIndex>>
-  updateIndexes: (id: string, title: string) => Promise<Array<CouponIndex>>
-  destroyIndexes: (id: string) => Promise<void>
+  createIndexes: (
+    id: CouponId,
+    title: CouponTitle
+  ) => Promise<Array<CouponIndex>>
+  updateIndexes: (
+    id: CouponId,
+    title: CouponTitle
+  ) => Promise<Array<CouponIndex>>
+  destroyIndexes: (id: CouponId) => Promise<void>
 }
