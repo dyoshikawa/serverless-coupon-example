@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Time } from '../time/Time'
+import { Time } from '../domain/time/Time'
 
 export class TimeImpl implements Time {
   now(): Date {

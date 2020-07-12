@@ -3,7 +3,7 @@ import { bootstrap } from '../../bootstrap'
 import { requestError, response, serverError } from '../http/response'
 import { COUPON_ID_NOT_GIVEN, COUPON_NOT_FOUND } from '../../constant/error'
 import { decodeFindCouponByIdInput } from '../parameter_decoder/ParameterDecoder'
-import { CouponId } from '../../entity/CouponId'
+import { CouponId } from '../../domain/entity/CouponId'
 
 export const findCouponById = async (
   event: APIGatewayProxyEvent

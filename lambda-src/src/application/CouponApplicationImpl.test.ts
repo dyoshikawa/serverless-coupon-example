@@ -1,15 +1,15 @@
 import { anything, instance, mock, resetCalls, verify, when } from 'ts-mockito'
-import { CouponAppServiceImpl } from './CouponAppServiceImpl'
-import { CouponRepository } from '../repository/CouponRepository'
-import { ImageEncoder } from '../encoder/ImageEncoder'
-import { Tokenizer } from '../tokenier/Tokenizer'
+import { CouponApplicationImpl } from './CouponApplicationImpl'
+import { CouponRepository } from '../domain/repository/CouponRepository'
+import { ImageEncoder } from '../domain/encoder/ImageEncoder'
+import { Tokenizer } from '../domain/tokenier/Tokenizer'
 import { COUPON_NOT_FOUND } from '../constant/error'
-import { CouponId } from '../entity/CouponId'
-import { CouponTitle } from '../entity/CouponTitle'
+import { CouponId } from '../domain/entity/CouponId'
+import { CouponTitle } from '../domain/entity/CouponTitle'
 import { buildCoupon, buildCouponIndex } from '../test/factory/CouponFactory'
-import { Keyword } from '../entity/Keyword'
-import { CouponDescription } from '../entity/CouponDescription'
-import { Base64 } from '../entity/Base64'
+import { Keyword } from '../domain/entity/Keyword'
+import { CouponDescription } from '../domain/entity/CouponDescription'
+import { Base64 } from '../domain/entity/Base64'
 import { jpgBase64, pngBase64 } from '../test/Base64String'
 
 describe('CouponServiceImpl', () => {
@@ -31,7 +31,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -50,7 +50,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -73,7 +73,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -108,7 +108,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -141,7 +141,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -177,7 +177,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
@@ -208,7 +208,7 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponAppServiceImpl({
+      const couponServiceImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,

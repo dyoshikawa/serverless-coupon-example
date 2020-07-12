@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from 'uuid'
-import { CouponRepository } from '../repository/CouponRepository'
-import { ImageEncoder } from '../encoder/ImageEncoder'
-import { Tokenizer } from '../tokenier/Tokenizer'
-import { Coupon, CouponIndex } from '../entity/Coupon'
-import { CouponAppService, SearchCouponResult } from './CouponAppService'
-import { CouponId } from '../entity/CouponId'
-import { StartKey } from '../entity/StartKey'
-import { Keyword } from '../entity/Keyword'
-import { PagePer } from '../entity/PagePer'
-import { CouponTitle } from '../entity/CouponTitle'
-import { CouponDescription } from '../entity/CouponDescription'
-import { Base64 } from '../entity/Base64'
+import { CouponRepository } from '../domain/repository/CouponRepository'
+import { ImageEncoder } from '../domain/encoder/ImageEncoder'
+import { Tokenizer } from '../domain/tokenier/Tokenizer'
+import { Coupon, CouponIndex } from '../domain/entity/Coupon'
+import { CouponApplication, SearchCouponResult } from './CouponApplication'
+import { CouponId } from '../domain/entity/CouponId'
+import { StartKey } from '../domain/entity/StartKey'
+import { Keyword } from '../domain/entity/Keyword'
+import { PagePer } from '../domain/entity/PagePer'
+import { CouponTitle } from '../domain/entity/CouponTitle'
+import { CouponDescription } from '../domain/entity/CouponDescription'
+import { Base64 } from '../domain/entity/Base64'
 
-export class CouponAppServiceImpl implements CouponAppService {
+export class CouponApplicationImpl implements CouponApplication {
   private couponRepository: CouponRepository
   private imageEncoder: ImageEncoder
   private tokenizer: Tokenizer

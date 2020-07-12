@@ -1,4 +1,4 @@
-import { COUPON_TITLE_INVALID } from '../constant/error'
+import { COUPON_TITLE_INVALID } from '../../constant/error'
 
 export const MAX_TITLE_LENGTH = 20
 

@@ -1,4 +1,4 @@
-import { Coupon } from '../../entity/Coupon'
+import { Coupon } from '../../domain/entity/Coupon'
 
 export type CouponJson = {
   id: string

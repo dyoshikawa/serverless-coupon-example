@@ -1,7 +1,7 @@
 import { AttributeValue, DynamoDBStreamEvent } from 'aws-lambda'
 import { bootstrap } from '../../bootstrap'
-import { CouponId } from '../../entity/CouponId'
-import { CouponTitle } from '../../entity/CouponTitle'
+import { CouponId } from '../../domain/entity/CouponId'
+import { CouponTitle } from '../../domain/entity/CouponTitle'
 
 export const createCouponIndex = async (
   event: DynamoDBStreamEvent

@@ -1,5 +1,5 @@
 import isBase64 from 'validator/lib/isBase64'
-import { INVALID_BASE64 } from '../constant/error'
+import { INVALID_BASE64 } from '../../constant/error'
 
 export class Base64 {
   private readonly value: string

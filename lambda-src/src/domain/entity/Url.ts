@@ -1,5 +1,5 @@
 import isURL from 'validator/lib/isURL'
-import { INVALID_URL } from '../constant/error'
+import { INVALID_URL } from '../../constant/error'
 
 export class Url {
   private readonly url: string

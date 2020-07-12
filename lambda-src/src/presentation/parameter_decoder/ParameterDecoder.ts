@@ -12,13 +12,13 @@ import {
   UNDEFINED_ERROR,
 } from '../../constant/error'
 
-import { CouponDescription } from '../../entity/CouponDescription'
-import { CouponTitle } from '../../entity/CouponTitle'
-import { CouponId } from '../../entity/CouponId'
-import { Base64 } from '../../entity/Base64'
-import { StartKey } from '../../entity/StartKey'
-import { Keyword } from '../../entity/Keyword'
-import { PagePer } from '../../entity/PagePer'
+import { CouponDescription } from '../../domain/entity/CouponDescription'
+import { CouponTitle } from '../../domain/entity/CouponTitle'
+import { CouponId } from '../../domain/entity/CouponId'
+import { Base64 } from '../../domain/entity/Base64'
+import { StartKey } from '../../domain/entity/StartKey'
+import { Keyword } from '../../domain/entity/Keyword'
+import { PagePer } from '../../domain/entity/PagePer'
 
 export const decodeFindCouponByIdInput = (
   couponId: string | undefined

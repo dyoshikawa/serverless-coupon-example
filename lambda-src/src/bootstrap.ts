@@ -1,18 +1,18 @@
 import AWS from 'aws-sdk'
-import { ImageEncoder } from './encoder/ImageEncoder'
-import { CouponStorage } from './storage/CouponStorage'
+import { ImageEncoder } from './domain/encoder/ImageEncoder'
+import { CouponStorage } from './domain/storage/CouponStorage'
 import { CouponS3Storage } from './infrastructure/CouponS3Storage'
 import * as Config from './config'
-import { CouponRepository } from './repository/CouponRepository'
+import { CouponRepository } from './domain/repository/CouponRepository'
 import { CouponDynamoRepository } from './infrastructure/CouponDynamoRepository'
 import { ImageEncoderImpl } from './infrastructure/ImageEncoderImpl'
 import { ComprehendTokenizer } from './infrastructure/ComprehendTokenizer'
-import { Tokenizer } from './tokenier/Tokenizer'
+import { Tokenizer } from './domain/tokenier/Tokenizer'
 import { TimeImpl } from './infrastructure/TimeImpl'
-import { Time } from './time/Time'
-import { CouponAppService } from './app_service/CouponAppService'
-import { CouponAppServiceImpl } from './app_service/CouponAppServiceImpl'
-import { Url } from './entity/Url'
+import { Time } from './domain/time/Time'
+import { CouponApplication } from './application/CouponApplication'
+import { CouponApplicationImpl } from './application/CouponApplicationImpl'
+import { Url } from './domain/entity/Url'
 import { JsonSerializerImpl } from './presentation/json_serializer/JsonSerializerImpl'
 import { JsonSerializer } from './presentation/json_serializer/JsonSerializer'
 
@@ -20,7 +20,7 @@ export type Container = {
   couponStorage: CouponStorage
   couponRepository: CouponRepository
   imageEncoder: ImageEncoder
-  couponService: CouponAppService
+  couponService: CouponApplication
   jsonSerializer: JsonSerializer
 }
 
@@ -40,7 +40,7 @@ export const bootstrap = (): Container => {
     time,
   })
   const imageEncoder: ImageEncoder = new ImageEncoderImpl()
-  const couponService: CouponAppService = new CouponAppServiceImpl({
+  const couponService: CouponApplication = new CouponApplicationImpl({
     couponRepository,
     imageEncoder,
     tokenizer,

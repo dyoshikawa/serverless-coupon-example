@@ -1,5 +1,5 @@
 import { ImageEncoderImpl } from './ImageEncoderImpl'
-import { Base64 } from '../entity/Base64'
+import { Base64 } from '../domain/entity/Base64'
 
 describe('ImageEncoderImpl', () => {
   const imageEncoderImpl = new ImageEncoderImpl('./tmp')

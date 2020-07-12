@@ -1,4 +1,4 @@
-import { PER_INVALID } from '../constant/error'
+import { PER_INVALID } from '../../constant/error'
 
 export class PagePer {
   private readonly value: number

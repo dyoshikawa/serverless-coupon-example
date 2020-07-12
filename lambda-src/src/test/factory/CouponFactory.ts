@@ -1,10 +1,10 @@
-import { CouponId } from '../../entity/CouponId'
-import { CouponTitle } from '../../entity/CouponTitle'
-import { CouponDescription } from '../../entity/CouponDescription'
-import { Url } from '../../entity/Url'
-import { Coupon, CouponIndex } from '../../entity/Coupon'
+import { CouponId } from '../../domain/entity/CouponId'
+import { CouponTitle } from '../../domain/entity/CouponTitle'
+import { CouponDescription } from '../../domain/entity/CouponDescription'
+import { Url } from '../../domain/entity/Url'
+import { Coupon, CouponIndex } from '../../domain/entity/Coupon'
 import dayjs from 'dayjs'
-import { Keyword } from '../../entity/Keyword'
+import { Keyword } from '../../domain/entity/Keyword'
 
 export const buildCoupon = (params?: {
   id?: CouponId
