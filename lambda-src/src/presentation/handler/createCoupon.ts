@@ -69,8 +69,8 @@ export const createCoupon = async (
     qrCode,
   } = decodedResult as DecodeCreateCouponInputResult
 
-  const { couponService, jsonSerializer } = bootstrap()
-  return await couponService
+  const { couponApplication, jsonSerializer } = bootstrap()
+  return await couponApplication
     .create({
       id,
       title,

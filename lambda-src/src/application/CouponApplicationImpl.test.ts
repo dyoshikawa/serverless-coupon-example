@@ -12,7 +12,7 @@ import { CouponDescription } from '../domain/entity/CouponDescription'
 import { Base64 } from '../domain/entity/Base64'
 import { jpgBase64, pngBase64 } from '../test/Base64String'
 
-describe('CouponServiceImpl', () => {
+describe('couponApplicationImpl', () => {
   const mockedCouponRepository = mock<CouponRepository>()
   const mockedImageEncoder = mock<ImageEncoder>()
   const mockedTokenizer = mock<Tokenizer>()
@@ -31,12 +31,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      const foundCoupon = await couponServiceImpl.findById(couponId)
+      const foundCoupon = await couponApplicationImpl.findById(couponId)
       expect(foundCoupon).toEqual(buildCoupon())
       verify(mockedCouponRepository.findById(couponId)).once()
     })
@@ -50,12 +50,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      await expect(couponServiceImpl.findById(couponId)).rejects.toThrow(
+      await expect(couponApplicationImpl.findById(couponId)).rejects.toThrow(
         COUPON_NOT_FOUND
       )
       verify(mockedCouponRepository.findById(couponId)).once()
@@ -73,12 +73,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      const searchRes = await couponServiceImpl.search({
+      const searchRes = await couponApplicationImpl.search({
         keyword: new Keyword('キーワード'),
       })
       expect(searchRes).toEqual({
@@ -108,12 +108,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      const coupon = await couponServiceImpl.create({
+      const coupon = await couponApplicationImpl.create({
         id: new CouponId('0000001'),
         title: new CouponTitle('タイトル'),
         description: new CouponDescription('説明'),
@@ -141,12 +141,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      const indexes = await couponServiceImpl.createIndexes(
+      const indexes = await couponApplicationImpl.createIndexes(
         new CouponId('0000001'),
         couponTitle
       )
@@ -177,12 +177,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      const indexes = await couponServiceImpl.updateIndexes(
+      const indexes = await couponApplicationImpl.updateIndexes(
         couponId,
         new CouponTitle('タイトル')
       )
@@ -208,12 +208,12 @@ describe('CouponServiceImpl', () => {
       const couponRepository = instance(mockedCouponRepository)
       const imageEncoder = instance(mockedImageEncoder)
       const tokenizer = instance(mockedTokenizer)
-      const couponServiceImpl = new CouponApplicationImpl({
+      const couponApplicationImpl = new CouponApplicationImpl({
         couponRepository,
         imageEncoder,
         tokenizer,
       })
-      await couponServiceImpl.destroyIndexes(couponId)
+      await couponApplicationImpl.destroyIndexes(couponId)
       verify(mockedCouponRepository.findIndexesByCouponId(couponId)).once()
       verify(mockedCouponRepository.destroyIndexes(anything())).once()
     })

@@ -42,8 +42,8 @@ export const searchCoupon = async (
     }
   }
 
-  const { couponService, jsonSerializer } = bootstrap()
-  return await couponService
+  const { couponApplication, jsonSerializer } = bootstrap()
+  return await couponApplication
     .search({
       keyword: decodedParams.keyword,
       per: decodedParams.per,

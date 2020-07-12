@@ -6,7 +6,7 @@ import { CouponTitle } from '../../domain/entity/CouponTitle'
 export const createCouponIndex = async (
   event: DynamoDBStreamEvent
 ): Promise<void> => {
-  const { couponService } = bootstrap()
+  const { couponApplication } = bootstrap()
   for (const record of event.Records) {
     switch (record.eventName) {
       case 'INSERT': {
@@ -25,7 +25,7 @@ export const createCouponIndex = async (
         if (newItem.title.S === undefined)
           return Promise.reject(new Error('Undefined: newItem.title.S'))
 
-        await couponService
+        await couponApplication
           .createIndexes(
             new CouponId(newItem.id.S),
             new CouponTitle(newItem.title.S)
@@ -64,7 +64,7 @@ export const createCouponIndex = async (
         if (oldItem.id.S === undefined)
           return Promise.reject(new Error('Undefined: newItem.id.S'))
 
-        await couponService
+        await couponApplication
           .destroyIndexes(new CouponId(oldItem.id.S))
           .catch((e) => Promise.reject(e))
         break

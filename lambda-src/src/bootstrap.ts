@@ -20,7 +20,7 @@ export type Container = {
   couponStorage: CouponStorage
   couponRepository: CouponRepository
   imageEncoder: ImageEncoder
-  couponService: CouponApplication
+  couponApplication: CouponApplication
   jsonSerializer: JsonSerializer
 }
 
@@ -40,7 +40,7 @@ export const bootstrap = (): Container => {
     time,
   })
   const imageEncoder: ImageEncoder = new ImageEncoderImpl()
-  const couponService: CouponApplication = new CouponApplicationImpl({
+  const couponApplication: CouponApplication = new CouponApplicationImpl({
     couponRepository,
     imageEncoder,
     tokenizer,
@@ -50,7 +50,7 @@ export const bootstrap = (): Container => {
     couponStorage,
     couponRepository,
     imageEncoder,
-    couponService,
+    couponApplication,
     jsonSerializer,
   }
 }
