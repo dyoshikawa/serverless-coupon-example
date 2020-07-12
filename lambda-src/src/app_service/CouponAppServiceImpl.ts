@@ -47,8 +47,8 @@ export class CouponAppServiceImpl implements CouponAppService {
     startKey?: StartKey
   }): Promise<SearchCouponResult> {
     return await this.couponRepository
-      .findByWord({
-        word: keyword,
+      .findByKeyword({
+        keyword,
         per,
         startKey,
       })
@@ -98,9 +98,7 @@ export class CouponAppServiceImpl implements CouponAppService {
     if (keys.length === 0) return []
 
     return await this.couponRepository
-      .saveIndexes(
-        keys.map((key) => ({ key: new Keyword(key), couponId: id }))
-      )
+      .saveIndexes(keys.map((key) => ({ key: new Keyword(key), couponId: id })))
       .catch((e) => Promise.reject(e))
   }
 
@@ -122,9 +120,7 @@ export class CouponAppServiceImpl implements CouponAppService {
       )
       .catch((e) => Promise.reject(e))
     return await this.couponRepository
-      .saveIndexes(
-        keys.map((key) => ({ key: new Keyword(key), couponId: id }))
-      )
+      .saveIndexes(keys.map((key) => ({ key: new Keyword(key), couponId: id })))
       .catch((e) => Promise.reject(e))
   }
 

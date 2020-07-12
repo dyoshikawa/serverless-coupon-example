@@ -58,35 +58,23 @@ export class CouponDynamoRepository implements CouponRepository {
 
   private toCoupon(item: CouponDynamoItem) {
     const { id, title, description, imageUrl, qrCodeUrl, savedAt } = item
-    let coupon: Coupon | undefined = undefined
-    try {
-      coupon = new Coupon({
-        id: new CouponId(id),
-        title: new CouponTitle(title),
-        description: new CouponDescription(description),
-        imageUrl: new Url(imageUrl),
-        qrCodeUrl: new Url(qrCodeUrl),
-        savedAt: this.time.fromString(savedAt),
-      })
-    } catch (e) {
-      throw e
-    }
-    return coupon
+    return new Coupon({
+      id: new CouponId(id),
+      title: new CouponTitle(title),
+      description: new CouponDescription(description),
+      imageUrl: new Url(imageUrl),
+      qrCodeUrl: new Url(qrCodeUrl),
+      savedAt: this.time.fromString(savedAt),
+    })
   }
 
   private toCouponIndex(item: CouponIndexDynamoItem) {
     const { key, couponId, savedAt } = item
-    let couponIndex: CouponIndex | undefined = undefined
-    try {
-      couponIndex = new CouponIndex({
-        key: new Keyword(key),
-        couponId: new CouponId(couponId),
-        savedAt: this.time.fromString(savedAt),
-      })
-    } catch (e) {
-      throw e
-    }
-    return couponIndex
+    return new CouponIndex({
+      key: new Keyword(key),
+      couponId: new CouponId(couponId),
+      savedAt: this.time.fromString(savedAt),
+    })
   }
 
   async findAll(): Promise<Array<Coupon>> {
@@ -117,12 +105,12 @@ export class CouponDynamoRepository implements CouponRepository {
     return this.toCoupon(item)
   }
 
-  async findByWord({
-    word,
+  async findByKeyword({
+    keyword,
     startKey,
     per,
   }: {
-    word: Keyword
+    keyword: Keyword
     startKey?: StartKey
     per?: PagePer
   }): Promise<SearchCouponResult> {
@@ -130,7 +118,7 @@ export class CouponDynamoRepository implements CouponRepository {
       .query({
         TableName: this.indexTableName,
         ExpressionAttributeNames: { '#name': 'key' },
-        ExpressionAttributeValues: { ':val': word.toString() },
+        ExpressionAttributeValues: { ':val': keyword.toString() },
         KeyConditionExpression: '#name = :val',
         ExclusiveStartKey: startKey?.toObject(),
         Limit: per?.toNumber() || 5,

@@ -1,5 +1,5 @@
 import { Coupon } from '../../entity/Coupon'
-import {CouponJson} from "./JsonSerializer";
+import { CouponJson } from './JsonSerializer'
 
 export class JsonSerializerImpl {
   toCouponJson(coupon: Coupon): CouponJson {

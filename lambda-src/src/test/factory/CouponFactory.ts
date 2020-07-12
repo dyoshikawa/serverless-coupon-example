@@ -27,7 +27,7 @@ export const buildCouponIndex = (params?: {
   key: Keyword
   couponId: CouponId
   savedAt: Date
-}) =>
+}): CouponIndex =>
   new CouponIndex({
     key: params?.key || new Keyword('キーワード'),
     couponId: params?.couponId || new CouponId('0000001'),

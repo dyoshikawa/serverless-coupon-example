@@ -1,13 +1,4 @@
-import {
-  anyString,
-  anything,
-  instance,
-  mock,
-  resetCalls,
-  verify,
-  when,
-} from 'ts-mockito'
-import dayjs from 'dayjs'
+import { anything, instance, mock, resetCalls, verify, when } from 'ts-mockito'
 import { CouponAppServiceImpl } from './CouponAppServiceImpl'
 import { CouponRepository } from '../repository/CouponRepository'
 import { ImageEncoder } from '../encoder/ImageEncoder'
@@ -19,7 +10,6 @@ import { buildCoupon, buildCouponIndex } from '../test/factory/CouponFactory'
 import { Keyword } from '../entity/Keyword'
 import { CouponDescription } from '../entity/CouponDescription'
 import { Base64 } from '../entity/Base64'
-import { Coupon } from '../entity/Coupon'
 import { jpgBase64, pngBase64 } from '../test/Base64String'
 
 describe('CouponServiceImpl', () => {
@@ -74,7 +64,7 @@ describe('CouponServiceImpl', () => {
 
   describe('search', () => {
     const coupons = [buildCoupon()]
-    when(mockedCouponRepository.findByWord(anything())).thenResolve({
+    when(mockedCouponRepository.findByKeyword(anything())).thenResolve({
       coupons,
       startKey: undefined,
     })
@@ -95,7 +85,7 @@ describe('CouponServiceImpl', () => {
         coupons,
         startKey: undefined,
       })
-      verify(mockedCouponRepository.findByWord(anything())).once()
+      verify(mockedCouponRepository.findByKeyword(anything())).once()
     })
   })
 

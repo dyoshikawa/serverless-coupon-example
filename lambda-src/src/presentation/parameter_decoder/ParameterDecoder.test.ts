@@ -6,7 +6,6 @@ import {
 } from './ParameterDecoder'
 import {
   COUPON_ID_NOT_GIVEN,
-  COUPON_TITLE_EMPTY,
   COUPON_TITLE_INVALID,
   COUPON_TITLE_NOT_GIVEN,
   INVALID_JSON,
@@ -18,7 +17,6 @@ import {
 import { jpgBase64, pngBase64 } from '../../test/Base64String'
 import { Keyword } from '../../entity/Keyword'
 import { CouponId } from '../../entity/CouponId'
-import { CouponIndex } from '../../entity/Coupon'
 import { PagePer } from '../../entity/PagePer'
 import { CouponTitle } from '../../entity/CouponTitle'
 import { CouponDescription } from '../../entity/CouponDescription'

@@ -182,8 +182,8 @@ describe('CouponDynamoRepository', () => {
         },
       ])
       .catch((e) => console.error(e))
-    const { coupons } = await couponDynamoRepository.findByWord({
-      word: new Keyword('秋葉原店'),
+    const { coupons } = await couponDynamoRepository.findByKeyword({
+      keyword: new Keyword('秋葉原店'),
     })
     expect(coupons).toEqual([
       {

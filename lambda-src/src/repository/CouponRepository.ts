@@ -10,8 +10,8 @@ import { CouponDescription } from '../entity/CouponDescription'
 export interface CouponRepository {
   findAll: () => Promise<Array<Coupon>>
   findById: (id: CouponId) => Promise<Coupon>
-  findByWord: (params: {
-    word: Keyword
+  findByKeyword: (params: {
+    keyword: Keyword
     startKey?: StartKey
     per?: PagePer
   }) => Promise<SearchCouponResult>
