@@ -2,7 +2,8 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { bootstrap } from '../../bootstrap'
 import { requestError, response, serverError } from '../http/response'
 import { COUPON_ID_NOT_GIVEN, COUPON_NOT_FOUND } from '../../constant/error'
-import { decodeFindCouponById } from '../parameter_decoder/ParameterDecoder'
+import { decodeFindCouponByIdInput } from '../parameter_decoder/ParameterDecoder'
+import { CouponId } from '../../entity/CouponId'
 
 export const findCouponById = async (
   event: APIGatewayProxyEvent
@@ -10,9 +11,9 @@ export const findCouponById = async (
   const { couponId } = event.pathParameters as {
     couponId: string | undefined
   }
-  let decodedCouponId: string
+  let decodedCouponId: CouponId
   try {
-    decodedCouponId = decodeFindCouponById(couponId)
+    decodedCouponId = decodeFindCouponByIdInput(couponId)
   } catch (e) {
     switch (e.message) {
       case COUPON_ID_NOT_GIVEN:

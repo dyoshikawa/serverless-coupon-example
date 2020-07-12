@@ -1,10 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { bootstrap } from '../../bootstrap'
 import { requestError, response, serverError } from '../http/response'
-import {
-  decodeSearchCouponParams,
-  DecodeSearchCouponResult,
-} from '../parameter_decoder/ParameterDecoder'
+import {decodeSearchCouponInput, DecodeSearchCouponInputResult} from '../parameter_decoder/ParameterDecoder'
 import {
   PARAMS_NOT_GIVEN,
   PER_INVALID,
@@ -21,9 +18,9 @@ export const searchCoupon = async (
     startKeyKey?: string
     startKeyCouponId?: string
   } | null
-  let decodedParams: DecodeSearchCouponResult
+  let decodedParams: DecodeSearchCouponInputResult
   try {
-    decodedParams = decodeSearchCouponParams(params)
+    decodedParams = decodeSearchCouponInput(params)
   } catch (e) {
     switch (e.message) {
       case PARAMS_NOT_GIVEN:

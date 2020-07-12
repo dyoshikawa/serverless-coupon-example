@@ -10,8 +10,8 @@ import { ComprehendTokenizer } from './infrastructure/ComprehendTokenizer'
 import { Tokenizer } from './tokenier/Tokenizer'
 import { TimeImpl } from './infrastructure/TimeImpl'
 import { Time } from './time/Time'
-import { CouponService } from './service/CouponService'
-import { CouponServiceImpl } from './service/CouponServiceImpl'
+import { CouponService } from './service/CouponAppService'
+import { CouponServiceImpl } from './service/CouponAppServiceImpl'
 
 export type Container = {
   couponStorage: CouponStorage
