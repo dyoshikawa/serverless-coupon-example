@@ -69,7 +69,7 @@ export const createCoupon = async (
     qrCode,
   } = decodedResult as DecodeCreateCouponInputResult
 
-  const { couponService } = bootstrap()
+  const { couponService, jsonSerializer } = bootstrap()
   return await couponService
     .create({
       id,
@@ -78,7 +78,7 @@ export const createCoupon = async (
       imageBase64: image,
       qrCodeBase64: qrCode,
     })
-    .then((coupon) => response(coupon))
+    .then((coupon) => response(jsonSerializer.toCouponJson(coupon)))
     .catch((e) => {
       console.error(e)
       return serverError()

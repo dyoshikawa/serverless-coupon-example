@@ -16,7 +16,7 @@ import {
   START_KEY_INVALID,
 } from '../../constant/error'
 import { jpgBase64, pngBase64 } from '../../test/Base64String'
-import { CouponIndexKey } from '../../entity/CouponIndexKey'
+import { Keyword } from '../../entity/Keyword'
 import { CouponId } from '../../entity/CouponId'
 import { CouponIndex } from '../../entity/Coupon'
 import { PagePer } from '../../entity/PagePer'
@@ -48,10 +48,10 @@ describe('ParameterDecoder', () => {
         startKeyCouponId: '0000001',
       }
       expect(decodeSearchCouponInput(params)).toEqual({
-        keyword: new CouponIndexKey('キーワード'),
+        keyword: new Keyword('キーワード'),
         per: new PagePer(5),
         startKey: {
-          key: new CouponIndexKey('キーワード'),
+          key: new Keyword('キーワード'),
           couponId: new CouponId('0000001'),
         },
       })

@@ -1,11 +1,11 @@
 import { CouponId } from './CouponId'
-import { CouponIndexKey } from './CouponIndexKey'
+import { Keyword } from './Keyword'
 
 export class StartKey {
-  private readonly key: CouponIndexKey
+  private readonly key: Keyword
   private readonly couponId: CouponId
 
-  constructor(key: CouponIndexKey, couponId: CouponId) {
+  constructor(key: Keyword, couponId: CouponId) {
     this.key = key
     this.couponId = couponId
   }

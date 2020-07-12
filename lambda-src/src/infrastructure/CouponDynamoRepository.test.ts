@@ -16,7 +16,7 @@ import { COUPON_NOT_FOUND } from '../constant/error'
 import { CouponId } from '../entity/CouponId'
 import { CouponTitle } from '../entity/CouponTitle'
 import { CouponDescription } from '../entity/CouponDescription'
-import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { Keyword } from '../entity/Keyword'
 import { Url } from '../entity/Url'
 
 describe('CouponDynamoRepository', () => {
@@ -169,21 +169,21 @@ describe('CouponDynamoRepository', () => {
     await couponDynamoRepository
       .saveIndexes([
         {
-          key: new CouponIndexKey('秋葉原店'),
+          key: new Keyword('秋葉原店'),
           couponId: new CouponId('0000001'),
         },
         {
-          key: new CouponIndexKey('商品'),
+          key: new Keyword('商品'),
           couponId: new CouponId('0000001'),
         },
         {
-          key: new CouponIndexKey('10%'),
+          key: new Keyword('10%'),
           couponId: new CouponId('0000001'),
         },
       ])
       .catch((e) => console.error(e))
     const { coupons } = await couponDynamoRepository.findByWord({
-      word: new CouponIndexKey('秋葉原店'),
+      word: new Keyword('秋葉原店'),
     })
     expect(coupons).toEqual([
       {
@@ -224,19 +224,19 @@ describe('CouponDynamoRepository', () => {
     await couponDynamoRepository
       .saveIndexes([
         {
-          key: new CouponIndexKey('秋葉原店'),
+          key: new Keyword('秋葉原店'),
           couponId: new CouponId('0000001'),
         },
         {
-          key: new CouponIndexKey('商品'),
+          key: new Keyword('商品'),
           couponId: new CouponId('0000001'),
         },
         {
-          key: new CouponIndexKey('OFF'),
+          key: new Keyword('OFF'),
           couponId: new CouponId('0000001'),
         },
         {
-          key: new CouponIndexKey('広島店'),
+          key: new Keyword('広島店'),
           couponId: new CouponId('0000002'), // 削除対象外
         },
       ])

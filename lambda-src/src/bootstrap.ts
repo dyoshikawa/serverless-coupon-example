@@ -13,12 +13,15 @@ import { Time } from './time/Time'
 import { CouponAppService } from './app_service/CouponAppService'
 import { CouponAppServiceImpl } from './app_service/CouponAppServiceImpl'
 import { Url } from './entity/Url'
+import { JsonSerializerImpl } from './presentation/json_serializer/JsonSerializerImpl'
+import { JsonSerializer } from './presentation/json_serializer/JsonSerializer'
 
 export type Container = {
   couponStorage: CouponStorage
   couponRepository: CouponRepository
   imageEncoder: ImageEncoder
   couponService: CouponAppService
+  jsonSerializer: JsonSerializer
 }
 
 export const bootstrap = (): Container => {
@@ -42,10 +45,12 @@ export const bootstrap = (): Container => {
     imageEncoder,
     tokenizer,
   })
+  const jsonSerializer = new JsonSerializerImpl()
   return {
     couponStorage,
     couponRepository,
     imageEncoder,
     couponService,
+    jsonSerializer,
   }
 }

@@ -9,7 +9,7 @@ import { CouponTitle } from '../entity/CouponTitle'
 import { CouponDescription } from '../entity/CouponDescription'
 import { CouponId } from '../entity/CouponId'
 import { Url } from '../entity/Url'
-import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { Keyword } from '../entity/Keyword'
 import { StartKey } from '../entity/StartKey'
 import { PagePer } from '../entity/PagePer'
 
@@ -79,7 +79,7 @@ export class CouponDynamoRepository implements CouponRepository {
     let couponIndex: CouponIndex | undefined = undefined
     try {
       couponIndex = new CouponIndex({
-        key: new CouponIndexKey(key),
+        key: new Keyword(key),
         couponId: new CouponId(couponId),
         savedAt: this.time.fromString(savedAt),
       })
@@ -122,7 +122,7 @@ export class CouponDynamoRepository implements CouponRepository {
     startKey,
     per,
   }: {
-    word: CouponIndexKey
+    word: Keyword
     startKey?: StartKey
     per?: PagePer
   }): Promise<SearchCouponResult> {
@@ -152,9 +152,21 @@ export class CouponDynamoRepository implements CouponRepository {
     const couponDynamoItems = (await Promise.all(couponDynamoPromises)).map(
       (item) => item.Item
     ) as Array<CouponDynamoItem>
+    const lastEvaluatedKey = output.LastEvaluatedKey as
+      | {
+          key: string
+          couponId: string
+        }
+      | undefined
     return {
       coupons: couponDynamoItems.map((item) => this.toCoupon(item)),
-      startKey: output.LastEvaluatedKey as StartKey | undefined,
+      startKey:
+        lastEvaluatedKey === undefined
+          ? undefined
+          : new StartKey(
+              new Keyword(lastEvaluatedKey.key),
+              new CouponId(lastEvaluatedKey.couponId)
+            ),
     }
   }
 
@@ -224,7 +236,7 @@ export class CouponDynamoRepository implements CouponRepository {
   }
 
   async saveIndexes(
-    params: Array<{ key: CouponIndexKey; couponId: CouponId }>
+    params: Array<{ key: Keyword; couponId: CouponId }>
   ): Promise<Array<CouponIndex>> {
     const savedAt = this.time.now()
     const promises = params.map(({ key, couponId }) => {
@@ -271,7 +283,7 @@ export class CouponDynamoRepository implements CouponRepository {
 
   async destroyIndexes(
     params: Array<{
-      key: CouponIndexKey
+      key: Keyword
       couponId: CouponId
     }>
   ): Promise<void> {

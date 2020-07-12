@@ -2,7 +2,7 @@ import { Url } from './Url'
 import { CouponId } from './CouponId'
 import { CouponTitle } from './CouponTitle'
 import { CouponDescription } from './CouponDescription'
-import { CouponIndexKey } from './CouponIndexKey'
+import { Keyword } from './Keyword'
 
 export class Coupon {
   id: CouponId
@@ -37,7 +37,7 @@ export class Coupon {
 }
 
 export class CouponIndex {
-  key: CouponIndexKey
+  key: Keyword
   couponId: CouponId
   savedAt: Date
 
@@ -46,7 +46,7 @@ export class CouponIndex {
     couponId,
     savedAt,
   }: {
-    key: CouponIndexKey
+    key: Keyword
     couponId: CouponId
     savedAt: Date
   }) {

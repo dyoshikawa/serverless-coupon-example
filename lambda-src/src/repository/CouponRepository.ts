@@ -2,7 +2,7 @@ import { Coupon, CouponIndex } from '../entity/Coupon'
 import { SearchCouponResult } from '../app_service/CouponAppService'
 import { StartKey } from '../entity/StartKey'
 import { PagePer } from '../entity/PagePer'
-import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { Keyword } from '../entity/Keyword'
 import { CouponId } from '../entity/CouponId'
 import { CouponTitle } from '../entity/CouponTitle'
 import { CouponDescription } from '../entity/CouponDescription'
@@ -11,7 +11,7 @@ export interface CouponRepository {
   findAll: () => Promise<Array<Coupon>>
   findById: (id: CouponId) => Promise<Coupon>
   findByWord: (params: {
-    word: CouponIndexKey
+    word: Keyword
     startKey?: StartKey
     per?: PagePer
   }) => Promise<SearchCouponResult>
@@ -27,12 +27,12 @@ export interface CouponRepository {
   destroy: (id: CouponId) => Promise<void>
   findAllIndexes: () => Promise<Array<CouponIndex>>
   saveIndexes: (
-    params: Array<{ key: CouponIndexKey; couponId: CouponId }>
+    params: Array<{ key: Keyword; couponId: CouponId }>
   ) => Promise<Array<CouponIndex>>
   findIndexesByCouponId: (couponId: CouponId) => Promise<Array<CouponIndex>>
   destroyIndexes: (
     params: Array<{
-      key: CouponIndexKey
+      key: Keyword
       couponId: CouponId
     }>
   ) => Promise<void>

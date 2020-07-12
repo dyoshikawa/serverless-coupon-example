@@ -6,7 +6,7 @@ import { Coupon, CouponIndex } from '../entity/Coupon'
 import { CouponAppService, SearchCouponResult } from './CouponAppService'
 import { CouponId } from '../entity/CouponId'
 import { StartKey } from '../entity/StartKey'
-import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { Keyword } from '../entity/Keyword'
 import { PagePer } from '../entity/PagePer'
 import { CouponTitle } from '../entity/CouponTitle'
 import { CouponDescription } from '../entity/CouponDescription'
@@ -42,7 +42,7 @@ export class CouponAppServiceImpl implements CouponAppService {
     per,
     startKey,
   }: {
-    keyword: CouponIndexKey
+    keyword: Keyword
     per?: PagePer
     startKey?: StartKey
   }): Promise<SearchCouponResult> {
@@ -99,7 +99,7 @@ export class CouponAppServiceImpl implements CouponAppService {
 
     return await this.couponRepository
       .saveIndexes(
-        keys.map((key) => ({ key: new CouponIndexKey(key), couponId: id }))
+        keys.map((key) => ({ key: new Keyword(key), couponId: id }))
       )
       .catch((e) => Promise.reject(e))
   }
@@ -123,7 +123,7 @@ export class CouponAppServiceImpl implements CouponAppService {
       .catch((e) => Promise.reject(e))
     return await this.couponRepository
       .saveIndexes(
-        keys.map((key) => ({ key: new CouponIndexKey(key), couponId: id }))
+        keys.map((key) => ({ key: new Keyword(key), couponId: id }))
       )
       .catch((e) => Promise.reject(e))
   }

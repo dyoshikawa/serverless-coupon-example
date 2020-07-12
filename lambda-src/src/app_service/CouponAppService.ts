@@ -1,5 +1,5 @@
 import { Coupon, CouponIndex } from '../entity/Coupon'
-import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { Keyword } from '../entity/Keyword'
 import { PagePer } from '../entity/PagePer'
 import { StartKey } from '../entity/StartKey'
 import { Base64 } from '../entity/Base64'
@@ -15,7 +15,7 @@ export type SearchCouponResult = {
 export interface CouponAppService {
   findById: (couponId: CouponId) => Promise<Coupon>
   search: (params: {
-    keyword: CouponIndexKey
+    keyword: Keyword
     per?: PagePer
     startKey?: StartKey
   }) => Promise<SearchCouponResult>

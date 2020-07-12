@@ -1,4 +1,4 @@
-export class CouponIndexKey {
+export class Keyword {
   private readonly value: string
 
   constructor(value: string) {

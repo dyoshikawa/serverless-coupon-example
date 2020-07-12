@@ -16,7 +16,7 @@ import { COUPON_NOT_FOUND } from '../constant/error'
 import { CouponId } from '../entity/CouponId'
 import { CouponTitle } from '../entity/CouponTitle'
 import { buildCoupon, buildCouponIndex } from '../test/factory/CouponFactory'
-import { CouponIndexKey } from '../entity/CouponIndexKey'
+import { Keyword } from '../entity/Keyword'
 import { CouponDescription } from '../entity/CouponDescription'
 import { Base64 } from '../entity/Base64'
 import { Coupon } from '../entity/Coupon'
@@ -89,7 +89,7 @@ describe('CouponServiceImpl', () => {
         tokenizer,
       })
       const searchRes = await couponServiceImpl.search({
-        keyword: new CouponIndexKey('キーワード'),
+        keyword: new Keyword('キーワード'),
       })
       expect(searchRes).toEqual({
         coupons,
@@ -178,7 +178,7 @@ describe('CouponServiceImpl', () => {
       couponIndexes
     )
 
-    const keyword = new CouponIndexKey('タイトル')
+    const keyword = new Keyword('タイトル')
     when(mockedTokenizer.pickWords(keyword.toString())).thenResolve([
       'キーワード',
     ])

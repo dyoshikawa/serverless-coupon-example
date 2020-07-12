@@ -23,10 +23,10 @@ export const findCouponById = async (
     }
   }
 
-  const { couponService } = bootstrap()
+  const { couponService, jsonSerializer } = bootstrap()
   return await couponService
     .findById(decodedCouponId)
-    .then((coupon) => response(coupon))
+    .then((coupon) => response(jsonSerializer.toCouponJson(coupon)))
     .catch((e: Error) => {
       switch (e.message) {
         case COUPON_NOT_FOUND: {

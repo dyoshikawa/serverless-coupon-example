@@ -17,7 +17,7 @@ import { CouponTitle } from '../../entity/CouponTitle'
 import { CouponId } from '../../entity/CouponId'
 import { Base64 } from '../../entity/Base64'
 import { StartKey } from '../../entity/StartKey'
-import { CouponIndexKey } from '../../entity/CouponIndexKey'
+import { Keyword } from '../../entity/Keyword'
 import { PagePer } from '../../entity/PagePer'
 
 export const decodeFindCouponByIdInput = (
@@ -41,7 +41,7 @@ export type DecodeSearchCouponInputParams = {
 } | null
 
 export type DecodeSearchCouponInputResult = {
-  keyword: CouponIndexKey
+  keyword: Keyword
   per: PagePer | undefined
   startKey: StartKey | undefined
 }
@@ -53,9 +53,9 @@ export const decodeSearchCouponInput = (
   if (params.keyword === undefined || params.keyword === '')
     throw new Error(SEARCH_KEYWORD_NOT_GIVEN)
 
-  let keyword: CouponIndexKey | undefined = undefined
+  let keyword: Keyword | undefined = undefined
   try {
-    keyword = new CouponIndexKey(params.keyword)
+    keyword = new Keyword(params.keyword)
   } catch (e) {
     throw new Error(e.message)
   }
@@ -74,10 +74,10 @@ export const decodeSearchCouponInput = (
       break
     }
     case 2: {
-      let key: CouponIndexKey | undefined = undefined
+      let key: Keyword | undefined = undefined
       let couponId: CouponId | undefined = undefined
       try {
-        key = new CouponIndexKey(params.startKeyKey as string)
+        key = new Keyword(params.startKeyKey as string)
         couponId = new CouponId(params.startKeyCouponId as string)
       } catch (e) {
         throw new Error(e.message)

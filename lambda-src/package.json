@@ -5,7 +5,7 @@
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
     "test": "jest",
-    "build": "tsc --noEmit && parcel build --target node --no-minify --bundle-node-modules --no-source-maps",
+    "build": "tsc --noEmit && parcel build --target node --no-minify --bundle-node-modules",
     "build:client": "yarn build ./src/client.ts",
     "start:client": " yarn build:client && node dist/client.js",
     "build:lambda": "yarn build -o lambda/bundle src/presentation/handler/index.ts",

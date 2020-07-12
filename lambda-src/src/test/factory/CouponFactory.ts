@@ -4,7 +4,7 @@ import { CouponDescription } from '../../entity/CouponDescription'
 import { Url } from '../../entity/Url'
 import { Coupon, CouponIndex } from '../../entity/Coupon'
 import dayjs from 'dayjs'
-import { CouponIndexKey } from '../../entity/CouponIndexKey'
+import { Keyword } from '../../entity/Keyword'
 
 export const buildCoupon = (params?: {
   id?: CouponId
@@ -24,12 +24,12 @@ export const buildCoupon = (params?: {
   })
 
 export const buildCouponIndex = (params?: {
-  key: CouponIndexKey
+  key: Keyword
   couponId: CouponId
   savedAt: Date
 }) =>
   new CouponIndex({
-    key: params?.key || new CouponIndexKey('キーワード'),
+    key: params?.key || new Keyword('キーワード'),
     couponId: params?.couponId || new CouponId('0000001'),
     savedAt: params?.savedAt || dayjs('2020-01-01').toDate(),
   })

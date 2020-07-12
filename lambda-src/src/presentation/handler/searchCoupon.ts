@@ -42,7 +42,7 @@ export const searchCoupon = async (
     }
   }
 
-  const { couponService } = bootstrap()
+  const { couponService, jsonSerializer } = bootstrap()
   return await couponService
     .search({
       keyword: decodedParams.keyword,
@@ -50,15 +50,18 @@ export const searchCoupon = async (
       startKey: decodedParams.startKey,
     })
     .then((res) =>
-      response(res.coupons, {
-        headers: {
-          'x-coupon-start-key-key': encodeURI(
-            res.startKey?.toObject().key || ''
-          ),
-          'x-coupon-start-key-coupon-id':
-            res.startKey?.toObject().couponId || '',
-        },
-      })
+      response(
+        res.coupons.map((coupon) => jsonSerializer.toCouponJson(coupon)),
+        {
+          headers: {
+            'x-coupon-start-key-key': encodeURI(
+              res.startKey?.toObject().key || ''
+            ),
+            'x-coupon-start-key-coupon-id':
+              res.startKey?.toObject().couponId || '',
+          },
+        }
+      )
     )
     .catch((e) => {
       console.error(e)
